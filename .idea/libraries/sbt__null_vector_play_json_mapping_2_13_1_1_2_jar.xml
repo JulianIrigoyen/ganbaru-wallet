@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: null-vector:play-json-mapping_2.13:1.1.2:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/dl.bintray.com/null-vector/releases/null-vector/play-json-mapping_2.13/1.1.2/play-json-mapping_2.13-1.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/dl.bintray.com/null-vector/releases/null-vector/play-json-mapping_2.13/1.1.2/play-json-mapping_2.13-1.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
