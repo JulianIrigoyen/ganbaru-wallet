@@ -77,6 +77,13 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0
 libraryDependencies += "org.mockito" % "mockito-core" % "2.23.4" % Test
 libraryDependencies += "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % Test
 
+//Akka Persistence Journal
+libraryDependencies += "org.iq80.leveldb"            % "leveldb"          % "0.7"
+libraryDependencies += "org.fusesource.leveldbjni"   % "leveldbjni-all"   % "1.8"
+
+
+
+
 fork := true
 
 enablePlugins(PlayScala)

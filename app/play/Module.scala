@@ -4,18 +4,15 @@ import akka.actor.{ActorSystem, Props, typed}
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
 import com.google.inject.AbstractModule
-import com.google.inject.name.Names
 import com.typesafe.config.{Config, ConfigValueFactory}
 import persistence.EventAdapters
 import sharding.EntityProvider
 import net.codingwell.scalaguice.ScalaModule
 import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.{Configuration, Environment, Mode}
-import play.Module.WalletsSystem
 import model.settings.GandaruServiceSettingsSharding
-import model.{GandaruClientId, WalletFactory, WalletFactorySharding, WalletId}
-import model.wallets.{WalletCommands, WalletSharding}
-import rest.wallets.{WalletResource, WalletRouter}
+import model.{WalletFactory, WalletFactorySharding}
+import model.wallets.{GandaruClientId, WalletCommands, WalletId, WalletSharding}
 
 /** https://www.programcreek.com/scala/play.api.libs.concurrent.AkkaGuiceSupport */
 
@@ -29,8 +26,6 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
   import akka.actor.typed.scaladsl.adapter._
   import play.Module.WalletsSystem
-
-  import scala.jdk.CollectionConverters._
 
   private val actorSystemName = "WalletsSystem"
   private val config: Config = configuration.underlying
@@ -50,12 +45,12 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     val walletFactory = new WalletFactorySharding(walletSharding.entityProvider())(typedWalletsSystem)
 
     settingsSharding.initSharding()
+    walletFactory.initSharding()
     walletSharding.initSharding()
 
-    bind[EntityProvider[WalletCommands.Command, WalletId]].toInstance(walletSharding.entityProvider())
     bind[WalletsSystem].toInstance(new WalletsSystem(typedWalletsSystem))
+    bind[EntityProvider[WalletCommands.Command, WalletId]].toInstance(walletSharding.entityProvider())
     bind[EntityProvider[WalletFactory.Command, GandaruClientId]].toInstance(walletFactory.entityProvider())
-    //bind(classOf[WalletResource]).to(classOf[WalletRouter])
 
   }
 
