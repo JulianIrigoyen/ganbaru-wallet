@@ -52,7 +52,7 @@ object Wallet {
       )
 
       EventSourcedBehavior[WalletCommands.Command, Event, WalletState](
-        persistenceId = PersistenceId("Wallet", walletId.walletId),
+        persistenceId = PersistenceId("Wallet", walletId.id),
         emptyState = state,
         commandHandler = applyCommand(_, _).applyEffect(),
         eventHandler = applyEvent
@@ -82,13 +82,14 @@ case class CreatedWallet(
                         timestamp: LocalDateTime
                         )
 
-case class WalletId(walletId: String)
-
-object WalletId {
-  implicit val walletId: Format[WalletId] = Json.format
-  def newWalletId: WalletId = new WalletId(UUID.randomUUID().toString)
+final case class WalletId(id: String) extends AnyVal {
+  override def toString: String =  id
 }
-final case class WalletNumber(number: Int)
+object WalletId {
+  def newWalletId(gandaruClientId: GandaruClientId): WalletId = new WalletId(s"${UUID.randomUUID()}-${gandaruClientId.id}")
+}
+final case class WalletNumber(number: Int) extends AnyVal
 
 final case class GandaruClientId(id: String) extends AnyVal
+
 

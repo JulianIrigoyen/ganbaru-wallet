@@ -1,16 +1,20 @@
 package rest.wallets
 
+import akka.actor.typed.{ActorRef, ActorSystem}
+import akka.Done
 import akka.cluster.sharding.typed.scaladsl.EntityRef
 import akka.util.Timeout
 import com.google.inject.Inject
 import model.WalletFactory
-import model.util.Acknowledge
+import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.{GandaruClientId, WalletCommands, WalletId}
+import model.wallets.WalletCommands.GetWallet
+import model.wallets.WalletEvents.WalletCreated
+import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
 import play.api.libs.json.{util => _, _}
-import play.api.mvc.{Action, ActionBuilder, AnyContent, InjectedController}
+import play.api.mvc.{Action, ActionBuilder, AnyContent, InjectedController, Result}
 import sharding.EntityProvider
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -19,6 +23,7 @@ import scala.concurrent.duration.DurationInt
 object WalletResource {
 
   implicit val configuration = rest.defaultJsonConfiguration
+  implicit val cw = JsonMapper.writesOf[CreatedWallet]
   implicit val wcpr = JsonMapper.readsOf[WalletConfirmationPost]
   implicit val wcpw = JsonMapper.writesOf[WalletConfirmationPost]
   implicit val tpr = JsonMapper.readsOf[TestPost]
@@ -46,20 +51,11 @@ class WalletResource @Inject()(
 
   private implicit val timeout: Timeout = Timeout(30.seconds)
 
-  def hello() = Action {
-    Ok("hello world")
-  }
-
-  def get() = Action {
-    Ok("Gotten")
-  }
-
-
   /** Implemented for TDD */
   def test(): Action[TestPost] = Action.async(parse.json[TestPost]) { request =>
     println("RECEIVED POST")
     println(request.body)
-    Future.successful(Ok)
+    Future.successful(Created)
   }
 
   def confirmWallet(): Action[WalletConfirmationPost] = Action.async(parse.json[WalletConfirmationPost]) { request =>
@@ -69,8 +65,42 @@ class WalletResource @Inject()(
     walletFactory.entityFor(clientId)
       .ask[Acknowledge[WalletId]](replyTo => WalletFactory.ConfirmWallet(WalletConfirmation(confirmation.cuit), replyTo))
       .transform(_.flatMap(_.toTry))
-      .map(walletId => Created(Json.obj("wallet_id" -> walletId.walletId)))
+      .map(walletId => Created(Json.obj("wallet_id" -> walletId.id)))
   }
 
+  def getWallet(walletId: WalletId): Action[AnyContent] = Action.async { _ =>
+    println(s"Received get request for wallet $walletId")
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[CreatedWallet]](replyTo => GetWallet(replyTo))
+      .map(acknowledgement => toResult[CreatedWallet](acknowledgement, Ok(_)) )
+  }
+
+
+  private def acknowledgementToResult (answer: Acknowledge[Done]) = {
+    answer match {
+      case AcknowledgeWithResult(result) =>  Ok
+      case AcknowledgeWithFailure(throwable) =>
+        println("Ack Failed")
+        Ok
+    }
+  }
+
+  private def toResult[T](acknowledgement: Acknowledge[T], onSuccess: JsValue => Result )(implicit  w: Writes[T]) = {
+    acknowledgement match {
+      case AcknowledgeWithResult(result: T) => onSuccess(result.asJson)
+      case AcknowledgeWithFailure(throwable) =>
+        println("Typed Ack Failed")
+        Ok
+    }
+  }
+
+/*  private def handleUnsuccessfulAnswer[T](answer: Answer[T]) = {
+    answer match {
+      case NoAnswer(reason) => NotFoundResult(reason)
+      case FailureAnswer(throwable) => ServerErrorResult(throwable)
+      case ErrorCodeAnswer(errorCode, errorMessage) => BadRequestResult(new IllegalStateException(errorCode + " : " + errorMessage))
+    }
+  }
+*/
 }
 
