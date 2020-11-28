@@ -17,6 +17,8 @@ import play.api.test._
 
 class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterAll {
 
+  val newAccountRequest = "requests/NewAccount.json"
+
 
   "properly post" in {
     val jsonString = """{ "id": 222, "cuit": "20391718068" }"""
@@ -37,7 +39,6 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
 
 
   "get a wallet" in {
-
     val jsonString = """{ "id": "222", "cuit": "20391718068" }"""
 
     val request = FakeRequest(POST, s"/api/wallets/confirm").withBody(Json.parse(jsonString))
@@ -49,7 +50,36 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     val getRequest = FakeRequest(GET, s"/api/wallets/$walletId")
     val wallet = route(app, getRequest).get
     println(Json.prettyPrint(contentAsJson(wallet)))
+    status(wallet) mustBe OK
+  }
 
+  "add an account to a wallet " in {
+
+    val jsonString = """{ "id": "222", "cuit": "20391718068" }"""
+
+    val request = FakeRequest(POST, s"/api/wallets/confirm").withBody(Json.parse(jsonString))
+    val result = route(app, request).get
+    println(Json.prettyPrint(contentAsJson(result)))
+    status(result) mustBe CREATED
+
+    val walletId = contentAsJson(result).\("wallet_id").as[String]
+    val accountRequestBody = loadRequest(newAccountRequest)
+    val postRequest = FakeRequest(POST, s"/api/wallets/$walletId/account").withJsonBody(Json.parse(accountRequestBody))
+
+    val x = route(app, postRequest).get
+    println(Json.prettyPrint(contentAsJson(x)))
+    status(x) mustBe CREATED
+
+    val getRequest = FakeRequest(GET, s"/api/wallets/$walletId")
+    val wallet = route(app, getRequest).get
+    println(Json.prettyPrint(contentAsJson(wallet)))
+    status(wallet) mustBe OK
+
+
+  }
+
+  private def loadRequest(requestFileName: String) = {
+    scala.io.Source.fromResource(requestFileName).getLines().mkString
   }
 
 
