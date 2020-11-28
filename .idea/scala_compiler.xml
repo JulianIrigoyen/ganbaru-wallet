@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="sbt 1" modules="ganbaru-wallet_4476" />
+    <profile name="sbt 1" modules="ganbaru-wallet_8937" />
     <profile name="sbt 2" modules="services-orders-scala">
       <option name="postfixOps" value="true" />
       <option name="implicitConversions" value="true" />

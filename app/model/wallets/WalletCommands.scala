@@ -25,8 +25,10 @@ object WalletCommands {
   }
 
 
+  final case class GetWallet(replyTo: ActorRef[Acknowledge[CreatedWallet]]) extends Command
+
+
   final case class AddAccount(cuit: String, balance: Option[Money], accountType: AccountType.AccountType, replyTo: ActorRef[Done]) extends Command
-  final case class GetWallet(replyTo: ActorRef[Done]) extends Command
 
 }
 
