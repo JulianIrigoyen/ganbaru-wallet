@@ -11,6 +11,8 @@ import play.api.mvc.Action
 class WalletRouter @Inject() (resource: WalletResource) extends SimpleRouter {
 
   override def routes: Routes = {
-    case POST(p"") => resource.hello
+    case POST(p"/test") => resource.test()
+    case POST(p"/confirm") => resource.confirmWallet()
+    case GET(p"/get") => resource.get()
   }
 }

@@ -1,14 +1,14 @@
 package model
 
 import akka.Done
-import akka.actor.typed.RecipientRef.RecipientRefOps
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior, RetentionCriteria}
-import model.WalletAggregate.WalletConfirmation
-import model.wallets.WalletCommands
-import model.wallets.WalletCommands.CreateWallet
+import model.util.Acknowledge
+import model.wallets.Wallet.WalletConfirmation
+import model.wallets.{GandaruClientId, WalletCommands, WalletId, WalletNumber}
+import model.wallets.WalletCommands.CreateWalletWithNumber
 import sharding.EntityProvider
 
 object WalletFactory {
@@ -16,9 +16,8 @@ object WalletFactory {
   sealed trait Command
 
   case class ConfirmWallet(
-                            clientId: ClientId,
                             confirmation: WalletConfirmation,
-                            replyTo: ActorRef[Done]
+                            replyTo: ActorRef[Acknowledge[WalletId]]
                             ) extends Command
 
   sealed trait Event
@@ -26,12 +25,12 @@ object WalletFactory {
 
   case class WalletNumberState(number: Int)
 
-  def apply(clientId: ClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]): Behavior[WalletFactory.Command] = {
+  def apply(gandaruClientId: GandaruClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]): Behavior[WalletFactory.Command] = {
     Behaviors.setup { implicit context =>
       EventSourcedBehavior[WalletFactory.Command, Event, WalletNumberState](
-        persistenceId = PersistenceId("WalletNumber", clientId.id),
+        persistenceId = PersistenceId("WalletNumber", gandaruClientId.id),
         emptyState = WalletNumberState(222),
-        commandHandler = commandHandler(clientId, walletProvider),
+        commandHandler = commandHandler(gandaruClientId, walletProvider),
         eventHandler = eventHandler
       )
         .withRetention(RetentionCriteria.snapshotEvery(10, 1).withDeleteEventsOnSnapshot)
@@ -39,17 +38,17 @@ object WalletFactory {
   }
 
   private def commandHandler(
-                              clientId: ClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]
+                              gandaruClientId: GandaruClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]
                             )
                             (implicit context: ActorContext[Command]): (WalletNumberState, Command) => Effect[Event, WalletNumberState] = {
     (_, command) =>
       command match {
-        case ConfirmWallet(walletId, confirmation, replyTo)=>
+        case ConfirmWallet(confirmation, replyTo) =>
           Effect.persist(WalletCreated)
             .thenRun { state =>
               val walletNumber = WalletNumber(state.number)
               val walletId = WalletId.newWalletId
-              walletProvider.entityFor(walletId) ! CreateWallet(clientId, confirmation, replyTo)
+              walletProvider.entityFor(walletId) ! CreateWalletWithNumber(gandaruClientId, walletNumber, confirmation, replyTo)
             }
 
       }

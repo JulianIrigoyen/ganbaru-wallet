@@ -6,7 +6,7 @@ import akka.Done
 import akka.actor.typed.ActorRef
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.EventSourcedBehavior
-import model.GandaruClientId
+import model.wallets.GandaruClientId
 import org.nullvector.EventAdapter
 import persistence.EventAdaptersAware
 import reactivemongo.api.bson.MacroConfiguration
@@ -24,13 +24,13 @@ object GandaruServiceSettings extends EventAdaptersAware {
   type State = Map[UUID, String]
 
   def apply(gandaruClientId: GandaruClientId): EventSourcedBehavior[GandaruServiceSettings.Command, Event, State] = EventSourcedBehavior(
-    persistenceId = persistenceId(gandaruClientId.id),
+    persistenceId = persistenceId(gandaruClientId),
     emptyState = Map.empty,
     commandHandler = commandHandler(gandaruClientId),
     eventHandler = eventHandler()
   )
 
-  def persistenceId(gandaruClientId: Int): PersistenceId = PersistenceId("Settings", gandaruClientId.toString)
+  def persistenceId(gandaruClientId: GandaruClientId): PersistenceId = PersistenceId("Settings", gandaruClientId.id)
 
   def commandHandler(id: GandaruClientId) = ???
   def eventHandler() = ???

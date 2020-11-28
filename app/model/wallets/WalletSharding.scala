@@ -3,7 +3,6 @@ package model.wallets
 import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.ShardingEnvelope
 import akka.cluster.sharding.typed.scaladsl.{Entity, EntityTypeKey}
-import model.{GandaruClientId, WalletAggregate, WalletId}
 import model.settings.GandaruServiceSettings
 import sharding.{EntityProvider, ShardingFactory}
 
