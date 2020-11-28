@@ -9,7 +9,7 @@ import model.wallets.Wallet.WalletConfirmation
 import model.wallets.WalletEvents.WalletCreated
 import model.{AccountType, Money}
 
-
+/** This interface defines all the commands that the Wallet persistent actor supports. */
 object WalletCommands {
 
   sealed trait Command
