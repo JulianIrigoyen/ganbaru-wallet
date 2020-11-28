@@ -3,6 +3,7 @@ package play
 import akka.actor.{ActorSystem, Props, typed}
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
+import akka.persistence.journal.leveldb.SharedLeveldbStore
 import com.google.inject.AbstractModule
 import com.typesafe.config.{Config, ConfigValueFactory}
 import persistence.EventAdapters
@@ -32,6 +33,10 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
   private val walletsSystem: ActorSystem = ActorSystem(actorSystemName, config.getConfig(actorSystemName))
 
   override def configure(): Unit = {
+
+    /** A shared LevelDB instance is started by instantiating the SharedLeveldbStore actor. */
+    //walletsSystem.actorOf(Props[SharedLeveldbStore](), "store")
+
     val typedWalletsSystem: typed.ActorSystem[Nothing] = walletsSystem.toTyped
 
     EventAdapters.register(walletsSystem)
@@ -51,7 +56,5 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     bind[WalletsSystem].toInstance(new WalletsSystem(typedWalletsSystem))
     bind[EntityProvider[WalletCommands.Command, WalletId]].toInstance(walletSharding.entityProvider())
     bind[EntityProvider[WalletFactory.Command, GandaruClientId]].toInstance(walletFactory.entityProvider())
-
   }
-
 }

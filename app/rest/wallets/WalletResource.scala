@@ -2,19 +2,19 @@ package rest.wallets
 
 import akka.actor.typed.{ActorRef, ActorSystem}
 import akka.Done
-import akka.cluster.sharding.typed.scaladsl.EntityRef
 import akka.util.Timeout
 import com.google.inject.Inject
-import model.WalletFactory
+import model.AccountType.AccountType
+import model.Money.Currency
+import model.{AccountId, WalletFactory}
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.GetWallet
-import model.wallets.WalletEvents.WalletCreated
+import model.wallets.WalletCommands.{AddAccount, GetWallet}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
 import play.api.libs.json.{util => _, _}
-import play.api.mvc.{Action, ActionBuilder, AnyContent, InjectedController, Result}
+import play.api.mvc.{Action, AnyContent, InjectedController, Result}
 import sharding.EntityProvider
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -28,16 +28,29 @@ object WalletResource {
   implicit val wcpw = JsonMapper.writesOf[WalletConfirmationPost]
   implicit val tpr = JsonMapper.readsOf[TestPost]
   implicit val tpw = JsonMapper.writesOf[TestPost]
+  implicit val acpr = JsonMapper.readsOf[AccountPost]
+  implicit val acpw = JsonMapper.writesOf[AccountPost]
+  implicit val accIdw = JsonMapper.writesOf[AccountId]
+
+  case class TestPost(id: Int, cuit: String)
 
   case class WalletConfirmationPost(
                                      id: String,
                                      cuit: String
                                    )
 
-  case class TestPost(id: Int, cuit: String)
+  case class AccountPost(
+                        cuit: String,
+                        accountType: AccountType,
+                        currency: Currency
+                        ) {
+    def toCommand(ackTo: ActorRef[Acknowledge[AccountId]]): AddAccount = {
+      AddAccount(cuit, accountType, currency, ackTo)
+    }
+  }
+
 
 }
-
 
 class WalletResource @Inject()(
                                 walletsSystem: WalletsSystem,
@@ -75,11 +88,19 @@ class WalletResource @Inject()(
       .map(acknowledgement => toResult[CreatedWallet](acknowledgement, Ok(_)) )
   }
 
+  def addAccount(walletId: WalletId): Action[AccountPost] = Action.async(parse.json[AccountPost]) { request =>
+    println(s"Received POST request to add account wallet $walletId")
+    val accountRequest = request.body
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[AccountId]](replyTo => accountRequest.toCommand(replyTo))
+      .map(acknowledgement => toResult[AccountId](acknowledgement, Created(_)))
+  }
+
 
   private def acknowledgementToResult (answer: Acknowledge[Done]) = {
     answer match {
       case AcknowledgeWithResult(result) =>  Ok
-      case AcknowledgeWithFailure(throwable) =>
+      case AcknowledgeWithFailure(reason) =>
         println("Ack Failed")
         Ok
     }
@@ -88,9 +109,9 @@ class WalletResource @Inject()(
   private def toResult[T](acknowledgement: Acknowledge[T], onSuccess: JsValue => Result )(implicit  w: Writes[T]) = {
     acknowledgement match {
       case AcknowledgeWithResult(result: T) => onSuccess(result.asJson)
-      case AcknowledgeWithFailure(throwable) =>
-        println("Typed Ack Failed")
-        Ok
+      case AcknowledgeWithFailure(err) =>
+        println(s"Typed Ack Failed $err")
+        BadRequest
     }
   }
 
