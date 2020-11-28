@@ -1,1 +1,4 @@
--> /v1/wallets    rest.wallets.WalletRouter
+GET /hello    		rest.wallets.WalletResource.hello
+POST /confirm		rest.wallets.WalletResource.confirmWallet()
+
+-> /api 		rest.wallets.WalletRouter
