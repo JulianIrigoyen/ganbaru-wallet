@@ -15,5 +15,5 @@ class WalletSharding(settings: EntityProvider[GandaruServiceSettings.Command, Ga
   override protected def entity(): Entity[WalletCommands.Command, ShardingEnvelope[WalletCommands.Command]] =
     Entity(typedKey)(context => Wallet(WalletId(context.entityId), settings))
 
-  override protected def entityId(id: WalletId): String = id.walletId
+  override protected def entityId(id: WalletId): String = id.id
 }

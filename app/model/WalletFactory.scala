@@ -47,7 +47,7 @@ object WalletFactory {
           Effect.persist(WalletCreated)
             .thenRun { state =>
               val walletNumber = WalletNumber(state.number)
-              val walletId = WalletId.newWalletId
+              val walletId = WalletId.newWalletId(gandaruClientId)
               walletProvider.entityFor(walletId) ! CreateWalletWithNumber(gandaruClientId, walletNumber, confirmation, replyTo)
             }
 

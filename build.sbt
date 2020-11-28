@@ -2,7 +2,7 @@ import org.scoverage.coveralls.Imports.CoverallsKeys.coverallsToken
 import sbt.Keys.libraryDependencies
 import sbt.{Credentials, Resolver}
 
-name := "services-orders-scala"
+name := "ganbaru-wallet-service"
 version := "2.0-SNAPSHOT"
 scalaVersion := "2.13.3"
 val akkaVersion = "2.6.10"

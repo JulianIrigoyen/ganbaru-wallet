@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: null-vector:akka-reactivemongo-plugin_2.13:1.4.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/dl.bintray.com/null-vector/releases/null-vector/akka-reactivemongo-plugin_2.13/1.4.0/akka-reactivemongo-plugin_2.13-1.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Library/Caches/Coursier/v1/https/dl.bintray.com/null-vector/releases/null-vector/akka-reactivemongo-plugin_2.13/1.4.0/akka-reactivemongo-plugin_2.13-1.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

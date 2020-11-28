@@ -1,0 +1,34 @@
+[0m[[0m[0mdebug[0m] [0m[0mjavaOptions: Vector(-XX:MaxRAMPercentage=80.0, -XX:+UseG1GC)[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mForking tests - parallelism = false[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mCreate a single-thread test executor[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mRunner for org.scalatest.tools.Framework produced 1 initial tasks for 1 tests.[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m  Running TaskDef(rest.wallets.WalletResourceSpec, sbt.ForkMain$SubclassFingerscan@153f5a29, false, [SuiteSelector])[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[32mWalletResourceSpec:[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[32m- properly post (247 milliseconds)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[32m- confirm a wallet (153 milliseconds)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m- get a wallet *** FAILED *** (15 milliseconds)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  scala.NotImplementedError: an implementation is missing[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at scala.Predef$.$qmark$qmark$qmark(Predef.scala:347)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at rest.wallets.WalletResourceSpec.$anonfun$new$3(WalletResourceSpec.scala:49)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:83)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at org.scalatest.Transformer.apply(Transformer.scala:22)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at org.scalatest.Transformer.apply(Transformer.scala:20)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at org.scalatest.WordSpecLike$$anon$3.apply(WordSpecLike.scala:1075)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  at org.scalatest.TestSuite.withFixture(TestSuite.scala:196)[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m  ...[0m[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0m    Produced 0 nested tasks and 3 events.[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mRunner for com.novocode.junit.JUnitFramework produced 0 initial tasks for 0 tests.[0m[0J
+[0m[[0m[0minfo[0m] [0m[0mScalaTest[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[36mRun completed in 11 seconds, 937 milliseconds.[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[36mTotal number of tests run: 3[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[36mSuites: completed 1, aborted 0[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[36mTests: succeeded 2, failed 1, canceled 0, ignored 0, pending 0[0m[0m[0J
+[0m[[0m[0minfo[0m] [0m[0m[31m*** 1 TEST FAILED ***[0m[0m[0J
+[0m[[0m[0mdebug[0m] [0m[0mSummary for JUnit not available.[0m[0J
+[0m[[0m[31merror[0m] [0m[0mFailed: Total 3, Failed 1, Errors 0, Passed 2[0m[0J
+[0m[[0m[31merror[0m] [0m[0mFailed tests:[0m[0J
+[0m[[0m[31merror[0m] [0m[0m	rest.wallets.WalletResourceSpec[0m[0J
+[0m[[0m[31merror[0m] [0m[0m(Test / [31mtest[0m) sbt.TestsFailedException: Tests unsuccessful[0m[0J
