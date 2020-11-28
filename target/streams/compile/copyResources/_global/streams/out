@@ -1,5 +1,0 @@
-[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m	(/Users/julian/Desktop/again/ganbaru-wallet/conf/sbt-run.conf,/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/classes/sbt-run.conf)[0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m	(/Users/julian/Desktop/again/ganbaru-wallet/conf/wallets-akka.conf,/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/classes/wallets-akka.conf)[0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m	(/Users/julian/Desktop/again/ganbaru-wallet/conf/application.conf,/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/classes/application.conf)[0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m	(/Users/julian/Desktop/again/ganbaru-wallet/conf/routes,/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/classes/routes)[0m[0J

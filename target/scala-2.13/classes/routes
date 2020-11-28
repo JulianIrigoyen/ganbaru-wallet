@@ -1,4 +1,0 @@
-GET /hello    		rest.wallets.WalletResource.hello
-POST /confirm		rest.wallets.WalletResource.confirmWallet()
-
--> /api 		rest.wallets.WalletRouter
