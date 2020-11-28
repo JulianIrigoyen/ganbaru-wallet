@@ -36,4 +36,6 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
   }
 
 
+
+
 }
