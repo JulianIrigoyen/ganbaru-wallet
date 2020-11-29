@@ -23,13 +23,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc772932-3e02-4f12-a143-fdbb2afa037b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/Account.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/Account.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/wallets/WalletCommands.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/wallets/WalletCommands.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/wallets/state/CreatedWalletState.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/wallets/state/CreatedWalletState.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/rest/wallets/WalletResource.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/rest/wallets/WalletResource.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/rest/wallets/WalletRouter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/rest/wallets/WalletRouter.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/rest/wallets/WalletResourceSpec.scala" beforeDir="false" afterPath="$PROJECT_DIR$/test/rest/wallets/WalletResourceSpec.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$018c7e0c05813fd17a91$.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$018c7e0c05813fd17a91.cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/config-classes/$018c7e0c05813fd17a91.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/streams/compile/compileIncremental/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/streams/compile/compileIncremental/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/streams/compile/copyResources/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/streams/compile/copyResources/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/project/target/streams/compile/incOptions/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/project/target/streams/compile/incOptions/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/_global/testListeners/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/_global/testListeners/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/compile/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compile/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/copyResources/_global/streams/copy-resources" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/copyResources/_global/streams/copy-resources" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/test/copyResources/_global/streams/copy-resources" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/test/copyResources/_global/streams/copy-resources" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/test/copyResources/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/test/copyResources/_global/streams/out" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
