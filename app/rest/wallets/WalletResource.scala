@@ -5,10 +5,10 @@ import akka.util.Timeout
 import com.google.inject.Inject
 import model.AccountType.AccountType
 import model.Money.Currency
-import model.{Account, AccountId, Money, TransactionId, WalletFactory}
+import model.{Account, AccountId, Money, Transaction, TransactionId, WalletFactory}
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, RollbackTransaction, Withdraw}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, ListTransactions, RollbackTransaction, Withdraw}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
@@ -21,21 +21,28 @@ import scala.concurrent.duration.DurationInt
 
 object WalletResource {
 
+  /**
+       Implicits used by nullvector.api.json.JsonMapper for serialization
+       https://github.com/null-vector/akka-reactivemongo-plugin
+                                                                          */
+
   implicit val configuration = rest.defaultJsonConfiguration
-  implicit val cw = JsonMapper.writesOf[CreatedWallet]
-  implicit val wcpr = JsonMapper.readsOf[WalletConfirmationPost]
-  implicit val wcpw = JsonMapper.writesOf[WalletConfirmationPost]
-  implicit val tpr = JsonMapper.readsOf[TestPost]
-  implicit val tpw = JsonMapper.writesOf[TestPost]
-  implicit val acpr = JsonMapper.readsOf[AccountPost]
-  implicit val acpw = JsonMapper.writesOf[AccountPost]
-  implicit val accIdw = JsonMapper.writesOf[AccountId]
-  implicit val accw = JsonMapper.writesOf[Account]
-  implicit val tridw = JsonMapper.writesOf[TransactionId]
-  implicit val moneyr = JsonMapper.readsOf[MoneyPatch]
-  implicit val moneyw = JsonMapper.writesOf[MoneyPatch]
-  implicit val trpr = JsonMapper.readsOf[TransferPost]
-  implicit val trpw = JsonMapper.writesOf[TransferPost]
+  implicit val cw            = JsonMapper.writesOf[CreatedWallet]
+  implicit val wcpr          = JsonMapper.readsOf[WalletConfirmationPost]
+  implicit val wcpw          = JsonMapper.writesOf[WalletConfirmationPost]
+  implicit val tpr           = JsonMapper.readsOf[TestPost]
+  implicit val tpw           = JsonMapper.writesOf[TestPost]
+  implicit val acpr          = JsonMapper.readsOf[AccountPost]
+  implicit val acpw          = JsonMapper.writesOf[AccountPost]
+  implicit val accIdw        = JsonMapper.writesOf[AccountId]
+  implicit val accw          = JsonMapper.writesOf[Account]
+  implicit val txw           = JsonMapper.writesOf[Transaction]
+  implicit val txr           = JsonMapper.readsOf[Transaction]
+  implicit val tridw         = JsonMapper.writesOf[TransactionId]
+  implicit val moneyr        = JsonMapper.readsOf[MoneyPatch]
+  implicit val moneyw        = JsonMapper.writesOf[MoneyPatch]
+  implicit val trpr          = JsonMapper.readsOf[TransferPost]
+  implicit val trpw          = JsonMapper.writesOf[TransferPost]
 
   case class TestPost(id: Int, cuit: String)
 
@@ -162,10 +169,16 @@ class WalletResource @Inject()(
       .map(acknowledgement => toResult[TransactionId](acknowledgement, Accepted(_)))
   }
 
+  def listAccountTransactions(walletId: WalletId, accountId: AccountId): Action[AnyContent] = Action.async { _ =>
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[List[Transaction]]](replyTo => ListTransactions(accountId, replyTo))
+      .map(acknowledgement => toResult[List[Transaction]](acknowledgement, Ok(_)))
+  }
+
   private def toResult[T](acknowledgement: Acknowledge[T], onSuccess: JsValue => Result )(implicit  w: Writes[T]) = {
     acknowledgement match {
       case AcknowledgeWithResult(result: T) => onSuccess(result.asJson)
-      case AcknowledgeWithFailure(_) => BadRequest
+      case AcknowledgeWithFailure(errorMessage) => BadRequest(errorMessage)
     }
   }
 }

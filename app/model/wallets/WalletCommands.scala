@@ -2,13 +2,12 @@ package model.wallets
 
 import java.time.LocalDateTime
 
-import akka.Done
 import akka.actor.typed.ActorRef
 import model.Money.Currency
 import model.util.Acknowledge
 import model.wallets.Wallet.WalletConfirmation
 import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionRolledback, TransactionValidated, WalletCreated, Withdrew}
-import model.{Account, AccountId, AccountType, Money, TransactionId}
+import model.{Account, AccountId, AccountType, Money, Transaction, TransactionId}
 
 /** This interface defines all the commands that the Wallet persistent actor supports. */
 
@@ -95,6 +94,7 @@ object WalletCommands {
     }
   }
 
-
+  final case class ListTransactions(accountId: AccountId, replyTo: ActorRef[Acknowledge[List[Transaction]]])
+    extends Command
 }
 
