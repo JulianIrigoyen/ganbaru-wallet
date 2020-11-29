@@ -6,10 +6,10 @@ import akka.util.Timeout
 import com.google.inject.Inject
 import model.AccountType.AccountType
 import model.Money.Currency
-import model.{AccountId, WalletFactory}
+import model.{Account, AccountId, WalletFactory}
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, GetWallet}
+import model.wallets.WalletCommands.{AddAccount, GetAccount, GetWallet}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
@@ -31,6 +31,7 @@ object WalletResource {
   implicit val acpr = JsonMapper.readsOf[AccountPost]
   implicit val acpw = JsonMapper.writesOf[AccountPost]
   implicit val accIdw = JsonMapper.writesOf[AccountId]
+  implicit val accw = JsonMapper.writesOf[Account]
 
   case class TestPost(id: Int, cuit: String)
 
@@ -94,6 +95,13 @@ class WalletResource @Inject()(
     walletProvider.entityFor(walletId)
       .ask[Acknowledge[AccountId]](replyTo => accountRequest.toCommand(replyTo))
       .map(acknowledgement => toResult[AccountId](acknowledgement, Created(_)))
+  }
+
+  def getAccount(walletId: WalletId, accountId: AccountId): Action[AnyContent] = Action.async { _ =>
+    println(s"Received GET request to find account $accountId for wallet $walletId")
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[Account]](replyTo => GetAccount(accountId, replyTo))
+      .map(acknowledgement => toResult[Account](acknowledgement, Ok(_)))
   }
 
 

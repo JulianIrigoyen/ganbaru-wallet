@@ -8,7 +8,7 @@ import model.Money.Currency
 import model.util.Acknowledge
 import model.wallets.Wallet.WalletConfirmation
 import model.wallets.WalletEvents.{AccountAdded, WalletCreated}
-import model.{AccountId, AccountType, Money}
+import model.{Account, AccountId, AccountType, Money}
 
 /** This interface defines all the commands that the Wallet persistent actor supports. */
 object WalletCommands {
@@ -46,6 +46,9 @@ object WalletCommands {
       )
     }
   }
+
+  final case class GetAccount(accountId: AccountId, replyTo: ActorRef[Acknowledge[Account]]) extends Command
+
 
 }
 
