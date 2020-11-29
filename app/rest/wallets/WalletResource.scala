@@ -49,8 +49,6 @@ object WalletResource {
       AddAccount(cuit, accountType, currency, ackTo)
     }
   }
-
-
 }
 
 class WalletResource @Inject()(
@@ -108,7 +106,7 @@ class WalletResource @Inject()(
     println(s"Received GET request to find bulkiest account in wallet $walletId")
     walletProvider.entityFor(walletId)
       .ask[Acknowledge[Account]](replyTo => GetBulkiestAccount(replyTo))
-
+      .map(acknowledgement => toResult[Account](acknowledgement, Ok(_)))
   }
 
 
