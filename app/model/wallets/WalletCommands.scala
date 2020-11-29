@@ -7,8 +7,8 @@ import akka.actor.typed.ActorRef
 import model.Money.Currency
 import model.util.Acknowledge
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletEvents.{AccountAdded, WalletCreated}
-import model.{Account, AccountId, AccountType, Money}
+import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionValidated, WalletCreated, Withdrew}
+import model.{Account, AccountId, AccountType, Money, TransactionId}
 
 /** This interface defines all the commands that the Wallet persistent actor supports. */
 
@@ -48,8 +48,39 @@ object WalletCommands {
     }
   }
 
-  final case class GetAccount(accountId: AccountId, replyTo: ActorRef[Acknowledge[Account]]) extends Command
+  final case class GetAccount(
+                               accountId: AccountId,
+                               replyTo: ActorRef[Acknowledge[Account]]) extends Command
+
   final case class GetBulkiestAccount(replyTo: ActorRef[Acknowledge[Account]]) extends Command
+
+  final case class Deposit(
+                            accountId: AccountId,
+                            amount: Money,
+                            replyTo: ActorRef[Acknowledge[Account]]) extends Command {
+    def asEvent(wallet: CreatedWallet, depositTo: Account): Deposited = {
+      Deposited(wallet.walletId, wallet.gandaruClientId, depositTo, amount, LocalDateTime.now())
+    }
+  }
+
+  final case class Withdraw(
+                             accountId: AccountId,
+                             amount: Money,
+                             replyTo: ActorRef[Acknowledge[Account]]) extends Command {
+    def asEvent(wallet: CreatedWallet, withdrawFrom: Account): Withdrew = {
+      Withdrew(wallet.walletId, wallet.gandaruClientId, withdrawFrom, amount,  LocalDateTime.now())
+    }
+  }
+
+  final case class AttemptTransaction(
+                                       debit: AccountId,
+                                       credit: AccountId,
+                                       amount: Money,
+                                       replyTo: ActorRef[Acknowledge[Done]]) extends Command {
+    def asEvent(wallet: CreatedWallet, tranasctionId: TransactionId, debit: Account, credit: Account): TransactionValidated = {
+      TransactionValidated(wallet.walletId, wallet.gandaruClientId, tranasctionId,  debit, credit, amount, LocalDateTime.now())
+    }
+  }
 
 
 }

@@ -6,6 +6,9 @@ import java.util.UUID
 
 import model.wallets.{GandaruClientId, WalletId}
 
+import scala.util.{Failure, Try}
+
+
 case class Account(
                   walletId: WalletId,
                   gandaruClientId: GandaruClientId,
@@ -15,13 +18,11 @@ case class Account(
                   balance: Money,
                   dateOpened: LocalDateTime
                   //TODO status: Open, Closed, Etc
-                  ) {
-  def toTuple(): (AccountId, BigDecimal) = (accountId, balance.amount)
-}
+                  )
 
 object AccountType extends Enumeration {
   type AccountType = Value
-  val Checkings, Savings = Value
+  val Spot, Margin, Futures, P2P, Pool = Value
 }
 
 final case class AccountId(id: String) extends AnyVal {

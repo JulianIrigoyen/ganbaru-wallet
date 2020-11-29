@@ -1,12 +1,13 @@
 package model.wallets.state
 
+import akka.Done
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.ActorContext
-import model.{Account, AccountId}
+import model.{Account, AccountId, Money, TransactionId}
 import model.settings.GandaruServiceSettings
 import model.util.{AcknowledgeWithFailure, AcknowledgeWithResult}
-import model.wallets.WalletCommands.{AddAccount, GetAccount, GetBulkiestAccount, GetWallet}
-import model.wallets.WalletEvents.WalletCreated
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, Withdraw}
+import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionValidated, WalletCreated, Withdrew}
 import model.wallets.state.WalletState.{EventsAnswerReplyEffect, NonEventsAnswerReplyEffect, WalletState}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletEvents, WalletId}
 import sharding.EntityProvider
@@ -23,7 +24,7 @@ case class CreatedWalletState(
 
       case GetWallet(replyTo) => new EventsAnswerReplyEffect(this, Nil, replyTo, _ => AcknowledgeWithResult(wallet))
 
-      case addAcc @ AddAccount(cuit, accountType, currency, replyTo) =>
+      case addAcc@AddAccount(cuit, accountType, currency, replyTo) =>
         println(s"Creating wallet account")
         wallet.accounts.collectFirst {
           case acc: Account if acc.accountType == accountType && acc.balance.currency == currency => acc
@@ -44,16 +45,104 @@ case class CreatedWalletState(
         }
 
       case GetBulkiestAccount(replyTo) =>
-        val bulkiestAccount = wallet.accounts.maxBy(_.balance.amount)
-        new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(bulkiestAccount))
+        wallet.accounts.size match {
+          case x if x == 0 =>
+            new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
+              AcknowledgeWithFailure(s"There are now accounts for wallet ${wallet.walletId}"))
+          case x if x == 1 => new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(wallet.accounts.head))
+          case _ =>
+            val bulkiestAccount = wallet.accounts.maxBy(_.balance.amount)
+            println(bulkiestAccount)
+            new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(bulkiestAccount))
+        }
 
+      case deposit @ Deposit(accountId, amountToDeposit, replyTo) =>
+        wallet.accounts.find(_.accountId == accountId) match {
+          case Some(account) =>
+            val events = List(deposit.asEvent(wallet, account))
+            val accountWithDeposit = account.copy(balance = account.balance + amountToDeposit)
+            new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, events, replyTo, _ => AcknowledgeWithResult(accountWithDeposit))
+          case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
+            AcknowledgeWithFailure(s"Account $accountId does not exist. "))
+        }
+
+      case withdraw @ Withdraw(accountId, amount, replyTo) =>
+        wallet.accounts.find(_.accountId == accountId) match {
+          case Some(account) => account match {
+            case _ if account.balance.amount < amount.amount =>
+              new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
+                AcknowledgeWithFailure(s"Account $accountId does not have enough balance to withdraw $amount "))
+            case _ =>
+              val events = List(withdraw.asEvent(wallet, account))
+              val accountWithWithdrawal = account.copy(balance = account.balance - amount)
+              new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, events, replyTo, _ => AcknowledgeWithResult(accountWithWithdrawal))
+          }
+
+          case None =>
+            new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
+            AcknowledgeWithFailure(s"Account $accountId does not exist. "))
+        }
+
+      case transact @ AttemptTransaction(debitId, creditId, amount, replyTo) =>
+        validateTransaction(debitId, creditId, amount) match {
+          case Some(accounts) =>
+            val transactionId = TransactionId.newTransactionId
+            val events = List(transact.asEvent(wallet, transactionId, accounts._1, accounts._2))
+            new EventsAnswerReplyEffect[AcknowledgeWithResult[Done]](this, events, replyTo, _ => AcknowledgeWithResult(Done))
+          case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Done]](replyTo,
+            AcknowledgeWithFailure(s"It is not possible to debit from $debitId to credit to $creditId. "))
+        }
     }
   }
 
   override def applyEvent(event: WalletEvents.Event): WalletState = event match {
     case _: WalletCreated => this
-    case WalletEvents.AccountAdded(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened) =>
+
+    case AccountAdded(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened) =>
       val newAccount = Account(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened)
       copy(wallet.copy(accounts = wallet.accounts :+ newAccount))
+
+    case Deposited(_, _, account, amountToDeposit, _) =>
+      val accountWithDeposit = credit(account, amountToDeposit).get
+      copy(wallet.copy(accounts = wallet.accounts.filterNot(_.accountId == account.accountId) :+ accountWithDeposit))
+
+    case Withdrew(_, _, account, amount, _) =>
+      val accountWithWithdrawal = debit(account, amount).get
+      copy(wallet.copy(accounts = wallet.accounts.filterNot(_.accountId == account.accountId) :+ accountWithWithdrawal))
+
+    case TransactionValidated(_, _, _, debited, credited, amount, _) =>
+      val updatedAccounts: (Account, Account) = executeTransaction(debited, credited, amount).get
+      copy(wallet.copy(accounts = wallet.accounts.filterNot ( acc =>
+        acc.accountId == debited.accountId || acc.accountId == credited.accountId
+        ) :+ updatedAccounts._1 :+ updatedAccounts._2
+      ))
+  }
+
+  private def debit(account: Account, amountToDebit: Money): Option[Account] = {
+    account match {
+      case _ if account.balance.amount < amountToDebit.amount => None
+      case _ if account.balance.currency != amountToDebit.currency => None
+      case _ => Some(account.copy(balance = account.balance - amountToDebit))
+    }
+  }
+
+  private def credit(account: Account, amountToCredit: Money): Option[Account] = {
+    Some(account.copy(balance = account.balance + amountToCredit))
+  }
+
+  private def executeTransaction(accountToDebit: Account, accountToCredit: Account, amount: Money) = {
+    for {
+      debited <- debit(accountToDebit, amount)
+      credited <- credit(accountToCredit, amount)
+    } yield (debited, credited)
+  }
+
+  private def validateTransaction(debitId: AccountId, creditId: AccountId, amount: Money) = {
+    val accounts = wallet.accounts
+    for {
+      accToDebit <- accounts.find(_.accountId == debitId)
+      accToCredit <- accounts.find(_.accountId == creditId)
+      if accToDebit.balance.amount > amount.amount
+    } yield (accToDebit, accToCredit)
   }
 }

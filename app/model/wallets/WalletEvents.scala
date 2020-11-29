@@ -2,16 +2,15 @@ package model.wallets
 
 import java.time.LocalDateTime
 
-import akka.stream.scaladsl.Balance
 import model.AccountType.AccountType
-import model.Money.Currency
-import model.{Account, AccountId, Money}
+import model.{Account, AccountId, Money, TransactionId}
 import model.wallets.Wallet.WalletConfirmation
 
 
 object WalletEvents {
 
   sealed trait Event
+
   final case class WalletCreated(
                                   walletId: WalletId,
                                   gandaruClientId: GandaruClientId,
@@ -29,5 +28,31 @@ object WalletEvents {
                                balance: Money,
                                dateOpened: LocalDateTime
                                ) extends Event
+
+  final case class Deposited(
+                            walletId: WalletId,
+                            gandaruClientId: GandaruClientId,
+                            account: Account,
+                            amount: Money,
+                            timestamp: LocalDateTime
+                            ) extends Event
+
+  final case class Withdrew(
+                           walletId: WalletId,
+                           gandaruClientId: GandaruClientId,
+                           account: Account,
+                           amount: Money,
+                           timestamp: LocalDateTime
+                           ) extends Event
+
+  final case class TransactionValidated(
+                                       walletId: WalletId,
+                                       gandaruClientId: GandaruClientId,
+                                       transactionId: TransactionId,
+                                       debited: Account,
+                                       credited: Account,
+                                       amount: Money,
+                                       timestamp: LocalDateTime
+                                       ) extends Event
 
 }
