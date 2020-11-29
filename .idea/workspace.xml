@@ -23,55 +23,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fc772932-3e02-4f12-a143-fdbb2afa037b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/resources/requests/NewMarginAccount.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/resources/requests/NewP2PAccount.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/Account.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/Account.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/Transaction.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/Transaction.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/model/wallets/Wallet.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/wallets/Wallet.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/model/wallets/WalletCommands.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/wallets/WalletCommands.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/model/wallets/WalletEvents.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/wallets/WalletEvents.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/model/wallets/state/CreatedWalletState.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/model/wallets/state/CreatedWalletState.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/play/ErrorHandler.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/play/ErrorHandler.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/play/Module.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/play/Module.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/rest/wallets/WalletResource.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/rest/wallets/WalletResource.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/rest/wallets/WalletRouter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/app/rest/wallets/WalletRouter.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/000042.sst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/000044.sst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/000047.sst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/000050.sst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/000051.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/journal/000120.sst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/journal/000122.sst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/journal/000125.sst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/journal/000126.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/journal/CURRENT" beforeDir="false" afterPath="$PROJECT_DIR$/target/journal/CURRENT" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/journal/LOG" beforeDir="false" afterPath="$PROJECT_DIR$/target/journal/LOG" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/journal/LOG.old" beforeDir="false" afterPath="$PROJECT_DIR$/target/journal/LOG.old" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/MANIFEST-000049" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/Account$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/Account$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/Account.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/Account.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountId$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountId$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountId.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountId.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountType$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountType$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/AccountType.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/Transaction$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/Transaction$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/Transaction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/Transaction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/TransactionId$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/TransactionId$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/TransactionId.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/TransactionId.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/journal/MANIFEST-000124" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/CreatedWallet$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/CreatedWallet$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/CreatedWallet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/CreatedWallet.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/GandaruClientId$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/GandaruClientId$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/GandaruClientId.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/GandaruClientId.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/Wallet$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/Wallet$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/Wallet$WalletConfirmation$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/Wallet$WalletConfirmation$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/Wallet$WalletConfirmation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/Wallet$WalletConfirmation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$GetAccount.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$GetAccount.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$GetBulkiestAccount$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$GetBulkiestAccount$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$GetBulkiestAccount.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$GetBulkiestAccount.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$AttemptTransaction$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$AttemptTransaction$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$AttemptTransaction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands$AttemptTransaction.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletCommands.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$AccountAdded$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$AccountAdded$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$AccountAdded.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$AccountAdded.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$WalletCreated$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$WalletCreated$.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$WalletCreated.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents$WalletCreated.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletEvents.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletId$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletId$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletId.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletId.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletNumber$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/WalletNumber$.class" afterDir="false" />
@@ -79,21 +53,29 @@
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState$$anonfun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState$$anonfun$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/play/ErrorHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/play/ErrorHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module$$typecreator1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module$$typecreator1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module$$typecreator2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module$$typecreator2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module$$typecreator3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module$$typecreator3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/play/Module.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$AccountPost$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$AccountPost$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$AccountPost.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$AccountPost.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$MoneyPatch$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$MoneyPatch$.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$MoneyPatch.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$MoneyPatch.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$TestPost$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$TestPost$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$TestPost.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$TestPost.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$WalletConfirmationPost$.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$WalletConfirmationPost$.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$WalletConfirmationPost.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource$WalletConfirmationPost.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletResource.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletRouter$$anonfun$routes$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/rest/wallets/WalletRouter$$anonfun$routes$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/test-classes/requests/NewAccount.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/test-classes/resources/requests/NewAccount.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/scala-2.13/test-classes/rest/wallets/WalletResourceSpec.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/test-classes/rest/wallets/WalletResourceSpec.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/snapshots/snapshot-WalletNumber%7C222-20-1606607716926" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/snapshots/snapshot-WalletNumber%7C222-30-1606608080209" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/resources/requests/NewAccount.json" beforeDir="false" afterPath="$PROJECT_DIR$/test/resources/requests/NewSpotAccount.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/scala-2.13/zinc/inc_compile_2.13.zip" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/zinc/inc_compile_2.13.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/snapshots/snapshot-WalletNumber%7C222-50-1606624389447" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/_global/_global/compileOutputs/previous" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/_global/_global/compileOutputs/previous" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/compile/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compile/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/_global/streams/out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/rest/wallets/WalletResourceSpec.scala" beforeDir="false" afterPath="$PROJECT_DIR$/test/rest/wallets/WalletResourceSpec.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -154,7 +136,7 @@
     <property name="scala_project_settings_configurable.last_selected_tab_index" value="0" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable" />
   </component>
-  <component name="RunManager" selected="ScalaTest.WalletResourceSpec.get the bulkiest account in a wallet">
+  <component name="RunManager" selected="ScalaTest.WalletResourceSpec.properly transfer">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="ganbaru-wallet-service" />
       <option name="VM_PARAMETERS" />
@@ -202,19 +184,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="WalletResourceSpec" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
-      <module name="ganbaru-wallet-service" />
-      <option name="allowRunningInParallel" value="false" />
-      <option name="selectedOptions">
-        <set />
-      </option>
-      <option name="testKind" value="Class" />
-      <option name="testClassPath" value="rest.wallets.WalletResourceSpec" />
-      <option name="workingDirectory" value="$PROJECT_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="WalletResourceSpec.deposit to a wallet" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
       <module name="ganbaru-wallet-service" />
       <option name="allowRunningInParallel" value="false" />
@@ -257,6 +226,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="WalletResourceSpec.properly transfer" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
+      <module name="ganbaru-wallet-service" />
+      <option name="allowRunningInParallel" value="false" />
+      <option name="selectedOptions">
+        <set />
+      </option>
+      <option name="testKind" value="Test name" />
+      <option name="testClassPath" value="rest.wallets.WalletResourceSpec" />
+      <option name="testName" value="properly transfer" />
+      <option name="workingDirectory" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="WalletResourceSpec.withdraw from a wallet account" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
       <module name="ganbaru-wallet-service" />
       <option name="allowRunningInParallel" value="false" />
@@ -273,11 +256,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="ScalaTest.WalletResourceSpec.properly transfer" />
         <item itemvalue="ScalaTest.WalletResourceSpec.get the bulkiest account in a wallet" />
         <item itemvalue="ScalaTest.WalletResourceSpec.withdraw from a wallet account" />
         <item itemvalue="ScalaTest.WalletResourceSpec.deposit to a wallet" />
         <item itemvalue="ScalaTest.WalletResourceSpec.get an account from wallet" />
-        <item itemvalue="ScalaTest.WalletResourceSpec" />
       </list>
     </recent_temporary>
   </component>
@@ -316,73 +299,57 @@
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
     <state x="2154" y="345" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606600224280" />
-    <state width="1878" height="370" key="GridCell.Tab.0.bottom" timestamp="1606624807278">
+    <state width="1878" height="483" key="GridCell.Tab.0.bottom" timestamp="1606629718092">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807278" />
+    <state width="1878" height="483" key="GridCell.Tab.0.bottom/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606629718092" />
     <state width="1398" height="471" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1606604889809" />
     <state width="1878" height="300" key="GridCell.Tab.0.bottom/0.23.1440.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606600763182" />
-    <state width="1878" height="370" key="GridCell.Tab.0.center" timestamp="1606624807276">
+    <state width="1878" height="483" key="GridCell.Tab.0.center" timestamp="1606629718090">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807276" />
+    <state width="1878" height="483" key="GridCell.Tab.0.center/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606629718090" />
     <state width="1398" height="471" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1606604889806" />
     <state width="1878" height="300" key="GridCell.Tab.0.center/0.23.1440.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606600763179" />
-    <state width="1878" height="370" key="GridCell.Tab.0.left" timestamp="1606624807275">
+    <state width="1878" height="483" key="GridCell.Tab.0.left" timestamp="1606629718088">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807275" />
+    <state width="1878" height="483" key="GridCell.Tab.0.left/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606629718088" />
     <state width="1398" height="471" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1606604889805" />
     <state width="1878" height="300" key="GridCell.Tab.0.left/0.23.1440.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606600763177" />
-    <state width="1878" height="370" key="GridCell.Tab.0.right" timestamp="1606624807277">
+    <state width="1878" height="483" key="GridCell.Tab.0.right" timestamp="1606629718091">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807277" />
+    <state width="1878" height="483" key="GridCell.Tab.0.right/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606629718091" />
     <state width="1398" height="471" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1606604889807" />
     <state width="1878" height="300" key="GridCell.Tab.0.right/0.23.1440.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606600763180" />
-    <state width="1878" height="370" key="GridCell.Tab.1.bottom" timestamp="1606624807172">
+    <state width="1878" height="370" key="GridCell.Tab.1.bottom" timestamp="1606625556562">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.1.bottom/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807172" />
-    <state width="1878" height="370" key="GridCell.Tab.1.center" timestamp="1606624807170">
+    <state width="1878" height="370" key="GridCell.Tab.1.bottom/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606625556562" />
+    <state width="1878" height="370" key="GridCell.Tab.1.center" timestamp="1606625556560">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.1.center/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807170" />
-    <state width="1878" height="370" key="GridCell.Tab.1.left" timestamp="1606624807169">
+    <state width="1878" height="370" key="GridCell.Tab.1.center/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606625556560" />
+    <state width="1878" height="370" key="GridCell.Tab.1.left" timestamp="1606625556560">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.1.left/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807169" />
-    <state width="1878" height="370" key="GridCell.Tab.1.right" timestamp="1606624807171">
+    <state width="1878" height="370" key="GridCell.Tab.1.left/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606625556560" />
+    <state width="1878" height="370" key="GridCell.Tab.1.right" timestamp="1606625556561">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state width="1878" height="370" key="GridCell.Tab.1.right/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624807171" />
-    <state x="2108" y="279" width="584" height="522" key="find.popup" timestamp="1606606274606">
+    <state width="1878" height="370" key="GridCell.Tab.1.right/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606625556561" />
+    <state x="2108" y="279" width="584" height="522" key="find.popup" timestamp="1606625708631">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state x="2108" y="279" width="584" height="522" key="find.popup/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606606274606" />
+    <state x="2108" y="279" width="584" height="522" key="find.popup/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606625708631" />
     <state x="501" y="233" width="574" height="522" key="find.popup/0.0.1440.900@0.0.1440.900" timestamp="1606602445704" />
     <state x="2108" y="279" width="584" height="522" key="find.popup/0.23.1440.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606600423031" />
-    <state x="2065" y="241" width="670" height="676" key="search.everywhere.popup" timestamp="1606624120075">
+    <state x="2065" y="241" width="670" height="676" key="search.everywhere.popup" timestamp="1606630100731">
       <screen x="1440" y="0" width="1920" height="1080" />
     </state>
-    <state x="2065" y="241" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606624120075" />
+    <state x="2065" y="241" width="670" height="676" key="search.everywhere.popup/0.0.1440.900/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606630100731" />
     <state x="469" y="201" width="670" height="564" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1606604897010" />
     <state x="2065" y="241" width="670" height="676" key="search.everywhere.popup/0.23.1440.877/1440.0.1920.1080@1440.0.1920.1080" timestamp="1606622640206" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/app/rest/wallets/WalletResource.scala</url>
-          <line>119</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="scala-line">
-          <url>file://$PROJECT_DIR$/app/rest/wallets/WalletResource.scala</url>
-          <line>122</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

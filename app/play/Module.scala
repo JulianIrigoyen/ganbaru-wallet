@@ -51,6 +51,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     walletFactory.initSharding()
     walletSharding.initSharding()
 
+    /** Bindings for Guice DI */
     bind[WalletsSystem].toInstance(new WalletsSystem(typedWalletsSystem))
     bind[EntityProvider[WalletCommands.Command, WalletId]].toInstance(walletSharding.entityProvider())
     bind[EntityProvider[WalletFactory.Command, GandaruClientId]].toInstance(walletFactory.entityProvider())
