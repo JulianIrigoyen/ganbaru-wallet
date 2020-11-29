@@ -1,4 +1,0 @@
-[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m	(/Users/julian/Desktop/again/ganbaru-wallet/test/resources/requests/NewSpotAccount.json,/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/test-classes/requests/NewSpotAccount.json)[0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m	(/Users/julian/Desktop/again/ganbaru-wallet/test/resources/requests/NewP2PAccount.json,/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/test-classes/requests/NewP2PAccount.json)[0m[0J
-[0m[[0m[0mdebug[0m] [0m[0m	(/Users/julian/Desktop/again/ganbaru-wallet/test/resources/requests/NewMarginAccount.json,/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/test-classes/requests/NewMarginAccount.json)[0m[0J
