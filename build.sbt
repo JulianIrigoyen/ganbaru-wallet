@@ -81,15 +81,9 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVers
 libraryDependencies += "org.iq80.leveldb"            % "leveldb"          % "0.7"
 libraryDependencies += "org.fusesource.leveldbjni"   % "leveldbjni-all"   % "1.8"
 
-
-
-
 fork := true
 
 enablePlugins(PlayScala)
-coverallsToken := Some("ZUAC7SL9ToirnZHj16F2Idx81MpNQ1VyO")
-
-coverageExcludedPackages := "<empty>;router;.*Arguments.*;.*NewRelicEventDispatcher.*;.*AckCommand.*;.*Credentials.*"
 
 sources in(Compile, doc) := Seq.empty
 

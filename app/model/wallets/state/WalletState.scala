@@ -31,7 +31,6 @@ object WalletState {
 
     override def applyEventsFrom(state: WalletState, f: (WalletState, Event) => WalletState): WalletState = {
       events.foldLeft(state)(f)
-
     }
   }
 

@@ -4,12 +4,14 @@ import java.time.LocalDateTime
 
 import akka.Done
 import akka.actor.typed.ActorRef
+import model.Money.Currency
 import model.util.Acknowledge
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletEvents.WalletCreated
-import model.{AccountType, Money}
+import model.wallets.WalletEvents.{AccountAdded, WalletCreated}
+import model.{Account, AccountId, AccountType, Money}
 
 /** This interface defines all the commands that the Wallet persistent actor supports. */
+
 object WalletCommands {
 
   sealed trait Command
@@ -28,7 +30,27 @@ object WalletCommands {
   final case class GetWallet(replyTo: ActorRef[Acknowledge[CreatedWallet]]) extends Command
 
 
-  final case class AddAccount(cuit: String, balance: Option[Money], accountType: AccountType.AccountType, replyTo: ActorRef[Done]) extends Command
+  final case class AddAccount(
+                               cuit: String,
+                               accountType: AccountType.AccountType,
+                               currency: Currency,
+                               replyTo: ActorRef[Acknowledge[AccountId]]) extends Command {
+    def asEvent(wallet: CreatedWallet, accountId: AccountId): AccountAdded = {
+      AccountAdded(
+        wallet.walletId,
+        wallet.gandaruClientId,
+        accountId,
+        cuit,
+        accountType,
+        Money(0, currency),
+        LocalDateTime.now()
+      )
+    }
+  }
+
+  final case class GetAccount(accountId: AccountId, replyTo: ActorRef[Acknowledge[Account]]) extends Command
+  final case class GetBulkiestAccount(replyTo: ActorRef[Acknowledge[Account]]) extends Command
+
 
 }
 

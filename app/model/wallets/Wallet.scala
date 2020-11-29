@@ -7,6 +7,7 @@ import akka.actor.typed.{Behavior, SupervisorStrategy}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{EventSourcedBehavior, RetentionCriteria}
+import model.Account
 import model.settings.GandaruServiceSettings
 import model.wallets.WalletCommands.Command
 import model.wallets.WalletEvents.Event
@@ -71,6 +72,7 @@ object CreatedWallet {
       walletId = walletId,
       gandaruClientId = gandaruClientId,
       walletNumber = walletNumber,
+      accounts = Seq.empty,
       timestamp = timeStamp
     )
   }
@@ -79,6 +81,7 @@ case class CreatedWallet(
                         walletId: WalletId,
                         gandaruClientId: GandaruClientId,
                         walletNumber: WalletNumber,
+                        accounts: Seq[Account],
                         timestamp: LocalDateTime
                         )
 

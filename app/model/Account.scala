@@ -4,21 +4,29 @@ package model
 import java.time.LocalDateTime
 import java.util.UUID
 
+import model.wallets.{GandaruClientId, WalletId}
+
 case class Account(
-                    accountId: AccountId,
-                    cuit: String,
-                    balance: Option[Money],
-                    accountType: AccountType.AccountType,
-                    dateOpened: LocalDateTime,
-                    dateClosed: Option[LocalDateTime]
-                  )
+                  walletId: WalletId,
+                  gandaruClientId: GandaruClientId,
+                  accountId: AccountId,
+                  cuit: String,
+                  accountType: AccountType.AccountType,
+                  balance: Money,
+                  dateOpened: LocalDateTime
+                  //TODO status: Open, Closed, Etc
+                  ) {
+  def toTuple(): (AccountId, BigDecimal) = (accountId, balance.amount)
+}
 
 object AccountType extends Enumeration {
   type AccountType = Value
-  val Crypto, Fiat, Futuros = Value
+  val Checkings, Savings = Value
 }
 
-case class AccountId(accountId: String)
+final case class AccountId(id: String) extends AnyVal {
+  override def toString: String = id
+}
 object AccountId {
   def newAccountId: AccountId = new AccountId(UUID.randomUUID().toString)
 }

@@ -14,8 +14,8 @@ case class AcknowledgeWithResult[+T](result: T) extends Acknowledge[T] {
   override def get: T = result
 }
 
-case class AcknowledgeWithFailure[T](throwable: Throwable) extends Acknowledge[T] {
-  override def toTry: Try[T] = Failure(throwable)
+case class AcknowledgeWithFailure[T](errorMessage: String) extends Acknowledge[T] {
+  override def toTry: Try[T] = Failure(new Exception(s"$errorMessage"))
   override def toOption: Option[T] = None
   override def get: T = toTry.get
 }
