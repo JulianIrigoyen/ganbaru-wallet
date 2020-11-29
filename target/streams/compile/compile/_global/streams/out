@@ -1,12 +1,5 @@
-[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/rest/wallets/WalletResource.scala:124:42: abstract type pattern T is unchecked since it is eliminated by erasure[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m      case AcknowledgeWithResult(result: T) => onSuccess(result.asJson)[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m                                         ^[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/model/wallets/state/CreatedWalletState.scala:22:5: match may not be exhaustive.[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/model/wallets/state/CreatedWalletState.scala:24:5: match may not be exhaustive.[0m[0J
 [0m[[0m[33mwarn[0m] [0m[0mIt would fail on the following input: CreateWalletWithNumber(_, _, _, _)[0m[0J
 [0m[[0m[33mwarn[0m] [0m[0m    command match {[0m[0J
 [0m[[0m[33mwarn[0m] [0m[0m    ^[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/model/wallets/state/EmptyWalletState.scala:15:152: match may not be exhaustive.[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0mIt would fail on the following inputs: AddAccount(_, _, _, _), GetAccount(_, _), GetBulkiestAccount(_), GetWallet(_)[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m  override def applyCommand(command: WalletCommands.Command)(implicit context: ActorContext[WalletCommands.Command]): WalletState.EventsAnswerEffect = command match {[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m                                                                                                                                                       ^[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0mthree warnings found[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0mone warning found[0m[0J

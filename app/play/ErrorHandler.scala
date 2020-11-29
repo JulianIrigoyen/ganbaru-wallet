@@ -31,14 +31,10 @@ class ErrorHandler extends DefaultHttpErrorHandler {
   }
 
   override def onServerError(request: RequestHeader, exception: Throwable): Future[Result] = {
-
     exception.printStackTrace()
-
     exception match {
       case e: IllegalArgumentException => Future.successful(BadRequest(e.toString))
       case e => Future.successful(InternalServerError(e.toString))
     }
-
   }
-
 }
