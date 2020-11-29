@@ -1,0 +1,11 @@
+openapi: "3.0.2"
+info:
+  title: Gandaru Wallet
+  version: "1.0"
+servers:
+  - url: https:/zaraza/v1
+paths:
+  $ref: "./paths/_index.yaml"
+components:
+  schemas:
+    $ref: "./components/schemas/_index.yaml"

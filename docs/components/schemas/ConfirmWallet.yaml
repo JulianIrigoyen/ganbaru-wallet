@@ -1,0 +1,10 @@
+properties:
+  id:
+    type: string
+    description: The Gandaru Client ID provided during subscription
+  cuit:
+    type: string
+    description: Unique tributary key
+required:
+  -id
+  -cuit
