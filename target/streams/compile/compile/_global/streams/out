@@ -1,5 +1,0 @@
-[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/model/wallets/state/CreatedWalletState.scala:24:5: match may not be exhaustive.[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0mIt would fail on the following input: CreateWalletWithNumber(_, _, _, _)[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m    command match {[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0m    ^[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0mone warning found[0m[0J
