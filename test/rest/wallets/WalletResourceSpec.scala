@@ -52,6 +52,11 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     status(account) mustBe OK
   }
 
+  "get the bulkiest account in a wallet" in {
+    //TODO after implementing transactions
+
+  }
+
   private def loadRequest(requestFileName: String) = {
     scala.io.Source.fromResource(requestFileName).getLines().mkString
   }

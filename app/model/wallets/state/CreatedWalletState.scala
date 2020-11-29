@@ -5,7 +5,7 @@ import akka.actor.typed.scaladsl.ActorContext
 import model.{Account, AccountId}
 import model.settings.GandaruServiceSettings
 import model.util.{AcknowledgeWithFailure, AcknowledgeWithResult}
-import model.wallets.WalletCommands.{AddAccount, GetAccount, GetWallet}
+import model.wallets.WalletCommands.{AddAccount, GetAccount, GetBulkiestAccount, GetWallet}
 import model.wallets.WalletEvents.WalletCreated
 import model.wallets.state.WalletState.{EventsAnswerReplyEffect, NonEventsAnswerReplyEffect, WalletState}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletEvents, WalletId}
@@ -42,6 +42,10 @@ case class CreatedWalletState(
           case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
             AcknowledgeWithFailure(s"Account $accountId does not exist. "))
         }
+
+      case GetBulkiestAccount(replyTo) =>
+        val bulkiestAccount = wallet.accounts.maxBy(_.balance.amount)
+        new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(bulkiestAccount))
 
     }
   }

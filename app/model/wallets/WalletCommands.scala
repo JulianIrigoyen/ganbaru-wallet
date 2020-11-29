@@ -11,6 +11,7 @@ import model.wallets.WalletEvents.{AccountAdded, WalletCreated}
 import model.{Account, AccountId, AccountType, Money}
 
 /** This interface defines all the commands that the Wallet persistent actor supports. */
+
 object WalletCommands {
 
   sealed trait Command
@@ -48,6 +49,7 @@ object WalletCommands {
   }
 
   final case class GetAccount(accountId: AccountId, replyTo: ActorRef[Acknowledge[Account]]) extends Command
+  final case class GetBulkiestAccount(replyTo: ActorRef[Acknowledge[Account]]) extends Command
 
 
 }
