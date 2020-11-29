@@ -7,7 +7,7 @@ import akka.actor.typed.scaladsl.ActorContext
 import model.{Account, AccountId, Money, Transaction, TransactionId}
 import model.settings.GandaruServiceSettings
 import model.util.{AcknowledgeWithFailure, AcknowledgeWithResult}
-import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, RollbackTransaction, Withdraw}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, ListTransactions, RollbackTransaction, Withdraw}
 import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionRolledback, TransactionValidated, WalletCreated, Withdrew}
 import model.wallets.state.WalletState.{EventsAnswerReplyEffect, NonEventsAnswerReplyEffect, WalletState}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletEvents, WalletId}
@@ -31,7 +31,7 @@ case class CreatedWalletState(
           case acc: Account if acc.accountType == accountType && acc.balance.currency == currency => acc
         } match {
           case Some(_) => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[AccountId]](replyTo,
-            AcknowledgeWithFailure(s"User with cuit $cuit already has a $accountType account for $currency . "))
+            AcknowledgeWithFailure(s"User with cuit $cuit already has a $accountType account in $currency . "))
           case None =>
             val newAccountId = AccountId.newAccountId
             val event = List(addAcc.asEvent(wallet, newAccountId))
@@ -41,14 +41,12 @@ case class CreatedWalletState(
       case GetAccount(accountId, replyTo) =>
         wallet.accounts.find(_.accountId == accountId) match {
           case Some(account) => new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(account))
-          case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
-            AcknowledgeWithFailure(s"Account $accountId does not exist. "))
+          case None          => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo, AcknowledgeWithFailure(s"Account $accountId does not exist. "))
         }
 
       case GetBulkiestAccount(replyTo) =>
         wallet.accounts.size match {
-          case x if x == 0 =>
-            new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
+          case x if x == 0 => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
               AcknowledgeWithFailure(s"There are now accounts for wallet ${wallet.walletId}"))
           case x if x == 1 => new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(wallet.accounts.head))
           case _ =>
@@ -70,8 +68,7 @@ case class CreatedWalletState(
       case withdraw @ Withdraw(accountId, amount, replyTo) =>
         wallet.accounts.find(_.accountId == accountId) match {
           case Some(account) => account match {
-            case _ if account.balance.amount < amount.amount =>
-              new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
+            case _ if account.balance.amount < amount.amount => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
                 AcknowledgeWithFailure(s"Account $accountId does not have enough balance to withdraw $amount "))
             case _ =>
               val events = List(withdraw.asEvent(wallet, account))
@@ -109,9 +106,17 @@ case class CreatedWalletState(
                 new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
                   AcknowledgeWithFailure(s"There are not enough funds in ${accountToDebit.accountId} to rollback transaction $transactionId. "))
             }
-          case None =>
-            new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
-              AcknowledgeWithFailure(s"Transaction $transactionId does not exist. "))
+          case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
+              AcknowledgeWithFailure(s"Transaction $transactionId does not exist (at least in wallet ${wallet.walletId}). "))
+        }
+
+      case ListTransactions(accountId, replyTo) =>
+        wallet.transactions match {
+          case head::tail =>
+            val txs = wallet.transactions.filter(acc => acc.credited.accountId == accountId || acc.debited.accountId == accountId ).toList
+            new EventsAnswerReplyEffect[AcknowledgeWithResult[List[Transaction]]](this, Nil, replyTo, _ => AcknowledgeWithResult(txs))
+          case List()  => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[List[Transaction]]](replyTo,
+            AcknowledgeWithFailure(s"Account $accountId has not yet registered transactions"))
         }
     }
   }
