@@ -34,6 +34,7 @@ import sharding.EntityProvider
  * loaded from the database - each event will be replayed to recreate the state
  * of the entity.
  */
+
 object Wallet {
 
   case class WalletConfirmation(cuit: String)
