@@ -5,8 +5,8 @@ import java.util.UUID
 
 case class Transaction(
                         transactionId: TransactionId,
-                        debit: Account,
-                        credit: Account,
+                        debited: Account,
+                        credited: Account,
                         amount: Money,
                         created: LocalDateTime
                       )

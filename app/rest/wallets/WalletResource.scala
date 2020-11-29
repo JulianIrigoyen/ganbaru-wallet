@@ -1,7 +1,6 @@
 package rest.wallets
 
 import akka.actor.typed.{ActorRef, ActorSystem}
-import akka.Done
 import akka.util.Timeout
 import com.google.inject.Inject
 import model.AccountType.AccountType
@@ -9,7 +8,7 @@ import model.Money.Currency
 import model.{Account, AccountId, Money, TransactionId, WalletFactory}
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, Withdraw}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, RollbackTransaction, Withdraw}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
@@ -157,14 +156,10 @@ class WalletResource @Inject()(
       .map(acknowledgement => toResult[TransactionId](acknowledgement, Created(_)))
   }
 
-
-  private def acknowledgementToResult (answer: Acknowledge[Done]) = {
-    answer match {
-      case AcknowledgeWithResult(result) =>  Ok
-      case AcknowledgeWithFailure(reason) =>
-        println("Ack Failed")
-        BadRequest
-    }
+  def rollbackTransaction(walletId: WalletId, transactionId: TransactionId): Action[AnyContent] = Action.async { _ =>
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[TransactionId]](replyTo => RollbackTransaction(transactionId, replyTo))
+      .map(acknowledgement => toResult[TransactionId](acknowledgement, Accepted(_)))
   }
 
   private def toResult[T](acknowledgement: Acknowledge[T], onSuccess: JsValue => Result )(implicit  w: Writes[T]) = {
