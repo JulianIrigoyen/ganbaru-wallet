@@ -1,15 +1,14 @@
 package rest.wallets
 
 import akka.actor.typed.{ActorRef, ActorSystem}
-import akka.Done
 import akka.util.Timeout
 import com.google.inject.Inject
 import model.AccountType.AccountType
 import model.Money.Currency
-import model.{Account, AccountId, WalletFactory}
+import model.{Account, AccountId, Money, TransactionId, WalletFactory}
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, GetAccount, GetBulkiestAccount, GetWallet}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, RollbackTransaction, Withdraw}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
@@ -32,6 +31,11 @@ object WalletResource {
   implicit val acpw = JsonMapper.writesOf[AccountPost]
   implicit val accIdw = JsonMapper.writesOf[AccountId]
   implicit val accw = JsonMapper.writesOf[Account]
+  implicit val tridw = JsonMapper.writesOf[TransactionId]
+  implicit val moneyr = JsonMapper.readsOf[MoneyPatch]
+  implicit val moneyw = JsonMapper.writesOf[MoneyPatch]
+  implicit val trpr = JsonMapper.readsOf[TransferPost]
+  implicit val trpw = JsonMapper.writesOf[TransferPost]
 
   case class TestPost(id: Int, cuit: String)
 
@@ -45,8 +49,31 @@ object WalletResource {
                         accountType: AccountType,
                         currency: Currency
                         ) {
-    def toCommand(ackTo: ActorRef[Acknowledge[AccountId]]): AddAccount = {
-      AddAccount(cuit, accountType, currency, ackTo)
+    def toCommand(replyTo: ActorRef[Acknowledge[AccountId]]): AddAccount =
+      AddAccount(cuit, accountType, currency, replyTo)
+  }
+
+  case class MoneyPatch(
+                         amount: BigDecimal,
+                         currency: Currency
+                       ) {
+
+    def toDepositCommand(accountId: AccountId, replyTo: ActorRef[Acknowledge[Account]]): Deposit =
+      Deposit(accountId, Money(amount, currency), replyTo)
+
+    def toWithdrawCommand(accountId: AccountId, replyTo: ActorRef[Acknowledge[Account]]): Withdraw =
+      Withdraw(accountId, Money(amount, currency), replyTo)
+
+  }
+
+  case class TransferPost(
+                           debit: String,
+                           credit: String,
+                           amount: BigDecimal,
+                           currency: Currency
+                          ) {
+    def toCommand(replyTo: ActorRef[Acknowledge[TransactionId]]): AttemptTransaction = {
+      AttemptTransaction(AccountId(debit), AccountId(credit), Money(amount, currency), replyTo)
     }
   }
 }
@@ -103,38 +130,43 @@ class WalletResource @Inject()(
   }
 
   def getBulkiestAccount(walletId: WalletId): Action[AnyContent] = Action.async { _ =>
-    println(s"Received GET request to find bulkiest account in wallet $walletId")
     walletProvider.entityFor(walletId)
       .ask[Acknowledge[Account]](replyTo => GetBulkiestAccount(replyTo))
       .map(acknowledgement => toResult[Account](acknowledgement, Ok(_)))
   }
 
+  def deposit(walletId: WalletId, accountId: AccountId): Action[MoneyPatch] = Action.async(parse.json[MoneyPatch]) { request =>
+    val moneyRequest = request.body
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[Account]](replyTo =>  moneyRequest.toDepositCommand(accountId, replyTo))
+      .map(acknowledgement => toResult[Account](acknowledgement, Ok(_)))
+  }
 
-  private def acknowledgementToResult (answer: Acknowledge[Done]) = {
-    answer match {
-      case AcknowledgeWithResult(result) =>  Ok
-      case AcknowledgeWithFailure(reason) =>
-        println("Ack Failed")
-        Ok
-    }
+  def withdraw(walletId: WalletId, accountId: AccountId): Action[MoneyPatch] = Action.async(parse.json[MoneyPatch]) { request =>
+    val moneyRequest = request.body
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[Account]](replyTo => moneyRequest.toWithdrawCommand(accountId, replyTo))
+      .map(acknowledgement => toResult[Account](acknowledgement, Ok(_)))
+  }
+
+  def transfer(walletId: WalletId): Action[TransferPost] = Action.async(parse.json[TransferPost]) { request =>
+    val transferRequest = request.body
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[TransactionId]](replyTo => transferRequest.toCommand(replyTo))
+      .map(acknowledgement => toResult[TransactionId](acknowledgement, Created(_)))
+  }
+
+  def rollbackTransaction(walletId: WalletId, transactionId: TransactionId): Action[AnyContent] = Action.async { _ =>
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[TransactionId]](replyTo => RollbackTransaction(transactionId, replyTo))
+      .map(acknowledgement => toResult[TransactionId](acknowledgement, Accepted(_)))
   }
 
   private def toResult[T](acknowledgement: Acknowledge[T], onSuccess: JsValue => Result )(implicit  w: Writes[T]) = {
     acknowledgement match {
       case AcknowledgeWithResult(result: T) => onSuccess(result.asJson)
-      case AcknowledgeWithFailure(err) =>
-        println(s"Typed Ack Failed $err")
-        BadRequest
+      case AcknowledgeWithFailure(_) => BadRequest
     }
   }
-
-/*  private def handleUnsuccessfulAnswer[T](answer: Answer[T]) = {
-    answer match {
-      case NoAnswer(reason) => NotFoundResult(reason)
-      case FailureAnswer(throwable) => ServerErrorResult(throwable)
-      case ErrorCodeAnswer(errorCode, errorMessage) => BadRequestResult(new IllegalStateException(errorCode + " : " + errorMessage))
-    }
-  }
-*/
 }
 

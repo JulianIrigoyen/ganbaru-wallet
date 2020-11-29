@@ -7,7 +7,7 @@ import akka.actor.typed.{Behavior, SupervisorStrategy}
 import akka.actor.typed.scaladsl.Behaviors
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{EventSourcedBehavior, RetentionCriteria}
-import model.Account
+import model.{Account, Transaction}
 import model.settings.GandaruServiceSettings
 import model.wallets.WalletCommands.Command
 import model.wallets.WalletEvents.Event
@@ -34,6 +34,7 @@ import sharding.EntityProvider
  * loaded from the database - each event will be replayed to recreate the state
  * of the entity.
  */
+
 object Wallet {
 
   case class WalletConfirmation(cuit: String)
@@ -73,6 +74,7 @@ object CreatedWallet {
       gandaruClientId = gandaruClientId,
       walletNumber = walletNumber,
       accounts = Seq.empty,
+      transactions = Seq.empty,
       timestamp = timeStamp
     )
   }
@@ -82,6 +84,7 @@ case class CreatedWallet(
                         gandaruClientId: GandaruClientId,
                         walletNumber: WalletNumber,
                         accounts: Seq[Account],
+                        transactions: Seq[Transaction],
                         timestamp: LocalDateTime
                         )
 
