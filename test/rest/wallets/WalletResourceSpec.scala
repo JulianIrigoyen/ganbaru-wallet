@@ -4,7 +4,7 @@ import java.time.{LocalDateTime, LocalTime}
 
 import akka.actor.ActorSystem
 import akka.persistence.typed.PersistenceId
-import model.wallets.GandaruClientId
+import model.wallets.{GandaruClientId, WalletId}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -28,59 +28,45 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
   }
 
   "confirm a wallet" in {
-    val jsonString = """{ "id": "222", "cuit": "20391718068" }"""
-
-    val request = FakeRequest(POST, s"/api/wallets/confirm").withBody(Json.parse(jsonString))
-    val result = route(app, request).get
-    println(Json.prettyPrint(contentAsJson(result)))
-    status(result) mustBe CREATED
-
+    createWallet mustBe a[WalletId]
   }
 
-
   "get a wallet" in {
-    val jsonString = """{ "id": "222", "cuit": "20391718068" }"""
-
-    val request = FakeRequest(POST, s"/api/wallets/confirm").withBody(Json.parse(jsonString))
-    val result = route(app, request).get
-    println(Json.prettyPrint(contentAsJson(result)))
-    status(result) mustBe CREATED
-
-    val walletId = contentAsJson(result).\("wallet_id").as[String]
-    val getRequest = FakeRequest(GET, s"/api/wallets/$walletId")
-    val wallet = route(app, getRequest).get
-    println(Json.prettyPrint(contentAsJson(wallet)))
-    status(wallet) mustBe OK
+    //println(getWalletJson(createWallet))
+    getWalletJson(createWallet) mustBe a[JsValue]
   }
 
   "add an account to a wallet " in {
-
-    val jsonString = """{ "id": "222", "cuit": "20391718068" }"""
-
-    val request = FakeRequest(POST, s"/api/wallets/confirm").withBody(Json.parse(jsonString))
-    val result = route(app, request).get
-    println(Json.prettyPrint(contentAsJson(result)))
-    status(result) mustBe CREATED
-
-    val walletId = contentAsJson(result).\("wallet_id").as[String]
+    val walletId = createWallet
     val accountRequestBody = loadRequest(newAccountRequest)
     val postRequest = FakeRequest(POST, s"/api/wallets/$walletId/account").withJsonBody(Json.parse(accountRequestBody))
 
-    val x = route(app, postRequest).get
-    println(Json.prettyPrint(contentAsJson(x)))
-    status(x) mustBe CREATED
+    val account = route(app, postRequest).get
+    println(Json.prettyPrint(contentAsJson(account)))
+    status(account) mustBe CREATED
 
-    val getRequest = FakeRequest(GET, s"/api/wallets/$walletId")
-    val wallet = route(app, getRequest).get
-    println(Json.prettyPrint(contentAsJson(wallet)))
-    status(wallet) mustBe OK
-
-
+    getWalletJson(walletId).\("accounts").get.as[JsArray].value.size mustBe 1
   }
 
   private def loadRequest(requestFileName: String) = {
     scala.io.Source.fromResource(requestFileName).getLines().mkString
   }
 
+  private def createWallet: WalletId = {
+    val jsonString = """{ "id": "222", "cuit": "20391718068" }"""
+    val request = FakeRequest(POST, s"/api/wallets/confirm").withBody(Json.parse(jsonString))
+    val result = route(app, request).get
+    println(Json.prettyPrint(contentAsJson(result)))
+    status(result) mustBe CREATED
+    WalletId((contentAsJson(result) \ "wallet_id").as[String])
+  }
+
+  private def getWalletJson(walletId: WalletId) = {
+    val getRequest = FakeRequest(GET, s"/api/wallets/$walletId")
+    val wallet = route(app, getRequest).get
+    println(Json.prettyPrint(contentAsJson(wallet)))
+    status(wallet) mustBe OK
+    contentAsJson(wallet)
+  }
 
 }

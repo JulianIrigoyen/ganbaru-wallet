@@ -6,7 +6,6 @@ import akka.management.scaladsl.AkkaManagement
 import akka.persistence.journal.leveldb.SharedLeveldbStore
 import com.google.inject.AbstractModule
 import com.typesafe.config.{Config, ConfigValueFactory}
-import persistence.EventAdapters
 import sharding.EntityProvider
 import net.codingwell.scalaguice.ScalaModule
 import play.api.libs.concurrent.AkkaGuiceSupport
@@ -39,7 +38,6 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
     val typedWalletsSystem: typed.ActorSystem[Nothing] = walletsSystem.toTyped
 
-    EventAdapters.register(walletsSystem)
 
     /** Akka Management does not start automatically and the routes have to be exposed manually */
     AkkaManagement(walletsSystem).start()

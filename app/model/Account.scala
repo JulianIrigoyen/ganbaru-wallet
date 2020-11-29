@@ -19,7 +19,7 @@ case class Account(
 
 object AccountType extends Enumeration {
   type AccountType = Value
-  val Crypto, Fiat, Futuros = Value
+  val Checkings, Savings = Value
 }
 
 final case class AccountId(id: String) extends AnyVal {

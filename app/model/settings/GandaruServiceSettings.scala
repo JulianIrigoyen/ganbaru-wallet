@@ -9,10 +9,9 @@ import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
 import model.util.AcknowledgeWithResult
 import model.wallets.GandaruClientId
 import org.nullvector.{EventAdapter, EventAdapterFactory}
-import persistence.EventAdaptersAware
 import reactivemongo.api.bson.MacroConfiguration
 
-object GandaruServiceSettings extends EventAdaptersAware {
+object GandaruServiceSettings {
 
   sealed trait Command
 
@@ -43,10 +42,5 @@ object GandaruServiceSettings extends EventAdaptersAware {
     event match {
       case AttributeAddedOrUpdated(attribute) => state + (UUID.fromString(attribute) -> attribute)
     }
-
-  override def eventAdapters(implicit macroConfiguration: MacroConfiguration): Seq[EventAdapter[_]] = Seq(
-    EventAdapterFactory.adapt[AttributeAddedOrUpdated]("AttributeAddedOrUpdated")
-  )
-
 
 }
