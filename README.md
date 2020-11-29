@@ -1,3 +1,4 @@
+[![Coverage Status](https://coveralls.io/repos/github/JulianIrigoyen/ganbaru-wallet/badge.svg?branch=master)](https://coveralls.io/github/JulianIrigoyen/ganbaru-wallet?branch=master)
 # Gandaru Wallet Application
 ###### Daruma Project
 
