@@ -4,6 +4,7 @@ import java.time.{LocalDateTime, LocalTime}
 
 import akka.actor.ActorSystem
 import akka.persistence.typed.PersistenceId
+import model.AccountId
 import model.wallets.{GandaruClientId, WalletId}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play.PlaySpec
@@ -18,7 +19,6 @@ import play.api.test._
 class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAndAfterAll {
 
   val newAccountRequest = "requests/NewAccount.json"
-
 
   "properly post" in {
     val jsonString = """{ "id": 222, "cuit": "20391718068" }"""
@@ -38,14 +38,18 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
 
   "add an account to a wallet " in {
     val walletId = createWallet
-    val accountRequestBody = loadRequest(newAccountRequest)
-    val postRequest = FakeRequest(POST, s"/api/wallets/$walletId/account").withJsonBody(Json.parse(accountRequestBody))
-
-    val account = route(app, postRequest).get
-    println(Json.prettyPrint(contentAsJson(account)))
-    status(account) mustBe CREATED
-
+    createAccount(walletId)
     getWalletJson(walletId).\("accounts").get.as[JsArray].value.size mustBe 1
+  }
+
+  "get an account from wallet" in {
+    val walletId = createWallet
+    val accountId = createAccount(walletId)
+
+    val getAccountRequest = FakeRequest(GET, s"/api/wallets/$walletId/accounts/$accountId")
+    val account = route(app, getAccountRequest).get
+    println(Json.prettyPrint(contentAsJson(account)))
+    status(account) mustBe OK
   }
 
   private def loadRequest(requestFileName: String) = {
@@ -69,4 +73,13 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     contentAsJson(wallet)
   }
 
+  private def createAccount(walletId: WalletId) = {
+    val accountRequestBody = loadRequest(newAccountRequest)
+    val postRequest = FakeRequest(POST, s"/api/wallets/$walletId/account").withJsonBody(Json.parse(accountRequestBody))
+    val account = route(app, postRequest).get
+    println(Json.prettyPrint(contentAsJson(account)))
+    status(account) mustBe CREATED
+
+    AccountId((contentAsJson(account) \ "id").as[String])
+  }
 }
