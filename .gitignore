@@ -1,2 +1,7 @@
-.idea/vcs.xml
-.DS_Store
+target
+/.DS_Store
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings

@@ -22,30 +22,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc772932-3e02-4f12-a143-fdbb2afa037b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/bundle_documentation.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/api_v1.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/components/schemas/ConfirmWallet.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/components/schemas/_index.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/paths/_index.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/paths/confirmWallet.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/docs/api_v1.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/ganbaru-wallet-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/ganbaru-wallet-service.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/000172.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/CURRENT" beforeDir="false" afterPath="$PROJECT_DIR$/target/journal/CURRENT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/LOG" beforeDir="false" afterPath="$PROJECT_DIR$/target/journal/LOG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/LOG.old" beforeDir="false" afterPath="$PROJECT_DIR$/target/journal/LOG.old" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/journal/MANIFEST-000171" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/classes/model/wallets/state/CreatedWalletState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/scala-2.13/zinc/inc_compile_2.13.zip" beforeDir="false" afterPath="$PROJECT_DIR$/target/scala-2.13/zinc/inc_compile_2.13.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/_global/_global/_global/streams/sync-exported-assets-web-assets" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/_global/_global/_global/streams/sync-exported-assets-web-assets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/_global/playCommonClassloader/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/_global/playCommonClassloader/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/compileIncremental/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/compileIncremental/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/copyResources/_global/streams/copy-resources" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/copyResources/_global/streams/copy-resources" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/compile/incOptions/_global/streams/out" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/streams/web-assets/assets/_global/streams/sync-assets-web-assets" beforeDir="false" afterPath="$PROJECT_DIR$/target/streams/web-assets/assets/_global/streams/sync-assets-web-assets" afterDir="false" />
-    </list>
+    <list default="true" id="fc772932-3e02-4f12-a143-fdbb2afa037b" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -79,12 +56,12 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="open-api" />
-                    <option name="lastUsedInstant" value="1606670072" />
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1606686200" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="master" />
-                    <option name="lastUsedInstant" value="1606638813" />
+                    <option name="branchName" value="open-api" />
+                    <option name="lastUsedInstant" value="1606670072" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="implement-transactions" />
