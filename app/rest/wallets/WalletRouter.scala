@@ -22,5 +22,6 @@ class WalletRouter @Inject() (resource: WalletResource) extends SimpleRouter {
     case POST(p"/$walletId/account") => resource.addAccount(WalletId(walletId))
 
     case GET(p"/$walletId/accounts/$accountId") => resource.getAccount(WalletId(walletId), AccountId(accountId))
+    case GET(p"/$walletId/accounts/bulkiest") => resource.getBulkiestAccount(WalletId(walletId))
   }
 }

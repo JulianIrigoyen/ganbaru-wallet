@@ -15,7 +15,9 @@ case class Account(
                   balance: Money,
                   dateOpened: LocalDateTime
                   //TODO status: Open, Closed, Etc
-                  )
+                  ) {
+  def toTuple(): (AccountId, BigDecimal) = (accountId, balance.amount)
+}
 
 object AccountType extends Enumeration {
   type AccountType = Value

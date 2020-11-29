@@ -9,7 +9,7 @@ import model.Money.Currency
 import model.{Account, AccountId, WalletFactory}
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, GetAccount, GetWallet}
+import model.wallets.WalletCommands.{AddAccount, GetAccount, GetBulkiestAccount, GetWallet}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
@@ -67,13 +67,13 @@ class WalletResource @Inject()(
 
   /** Implemented for TDD */
   def test(): Action[TestPost] = Action.async(parse.json[TestPost]) { request =>
-    println("RECEIVED POST")
-    println(request.body)
+    //println("RECEIVED POST")
+    //println(request.body)
     Future.successful(Created)
   }
 
   def confirmWallet(): Action[WalletConfirmationPost] = Action.async(parse.json[WalletConfirmationPost]) { request =>
-    println(s"Received request to create wallet ${request.body}")
+    //println(s"Received request to create wallet ${request.body}")
     val confirmation = request.body
     val clientId = GandaruClientId(confirmation.id)
     walletFactory.entityFor(clientId)
@@ -83,14 +83,14 @@ class WalletResource @Inject()(
   }
 
   def getWallet(walletId: WalletId): Action[AnyContent] = Action.async { _ =>
-    println(s"Received get request for wallet $walletId")
+    //println(s"Received get request for wallet $walletId")
     walletProvider.entityFor(walletId)
       .ask[Acknowledge[CreatedWallet]](replyTo => GetWallet(replyTo))
       .map(acknowledgement => toResult[CreatedWallet](acknowledgement, Ok(_)) )
   }
 
   def addAccount(walletId: WalletId): Action[AccountPost] = Action.async(parse.json[AccountPost]) { request =>
-    println(s"Received POST request to add account wallet $walletId")
+    //println(s"Received POST request to add account wallet $walletId")
     val accountRequest = request.body
     walletProvider.entityFor(walletId)
       .ask[Acknowledge[AccountId]](replyTo => accountRequest.toCommand(replyTo))
@@ -98,10 +98,17 @@ class WalletResource @Inject()(
   }
 
   def getAccount(walletId: WalletId, accountId: AccountId): Action[AnyContent] = Action.async { _ =>
-    println(s"Received GET request to find account $accountId for wallet $walletId")
+    //println(s"Received GET request to find account $accountId for wallet $walletId")
     walletProvider.entityFor(walletId)
       .ask[Acknowledge[Account]](replyTo => GetAccount(accountId, replyTo))
       .map(acknowledgement => toResult[Account](acknowledgement, Ok(_)))
+  }
+
+  def getBulkiestAccount(walletId: WalletId): Action[AnyContent] = Action.async { _ =>
+    println(s"Received GET request to find bulkiest account in wallet $walletId")
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[Account]](replyTo => GetBulkiestAccount(replyTo))
+
   }
 
 
