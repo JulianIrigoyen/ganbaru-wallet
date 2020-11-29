@@ -27,5 +27,7 @@ class WalletRouter @Inject() (resource: WalletResource) extends SimpleRouter {
 
     case POST(p"/$walletId/transfer") => resource.transfer(WalletId(walletId))
 
+    case DELETE(p"/$walletId/rollback/$transactionId") => resource.rollbackTransaction(WalletId(walletId), TransactionId(transactionId))
+
   }
 }

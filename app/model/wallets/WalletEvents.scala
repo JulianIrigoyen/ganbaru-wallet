@@ -55,4 +55,14 @@ object WalletEvents {
                                        timestamp: LocalDateTime
                                        ) extends Event
 
+  final case class TransactionRolledback(
+                                          walletId: WalletId,
+                                          gandaruClientId: GandaruClientId,
+                                          transactionId: TransactionId,
+                                          accountToDebit: Account,
+                                          accountToCredit: Account,
+                                          amount: Money,
+                                          timestamp: LocalDateTime
+                                        ) extends Event
+
 }

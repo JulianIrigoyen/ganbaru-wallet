@@ -7,8 +7,8 @@ import akka.actor.typed.scaladsl.ActorContext
 import model.{Account, AccountId, Money, Transaction, TransactionId}
 import model.settings.GandaruServiceSettings
 import model.util.{AcknowledgeWithFailure, AcknowledgeWithResult}
-import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, Withdraw}
-import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionValidated, WalletCreated, Withdrew}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, RollbackTransaction, Withdraw}
+import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionRolledback, TransactionValidated, WalletCreated, Withdrew}
 import model.wallets.state.WalletState.{EventsAnswerReplyEffect, NonEventsAnswerReplyEffect, WalletState}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletEvents, WalletId}
 import sharding.EntityProvider
@@ -93,6 +93,26 @@ case class CreatedWalletState(
           case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
             AcknowledgeWithFailure(s"It is not possible to debit from $debitId to credit to $creditId. "))
         }
+
+      case rollback @ RollbackTransaction(transactionId, replyTo) =>
+        wallet.transactions.find(_.transactionId == transactionId) match {
+          case Some(tx) =>
+            val accountToDebit = tx.credited
+            val accountToCredit = tx.debited
+
+            validateTransaction(accountToDebit.accountId, accountToCredit.accountId, tx.amount) match {
+              case Some(_) =>
+                val events = List(rollback.asEvent(wallet, accountToDebit, accountToCredit, tx.amount))
+                new EventsAnswerReplyEffect[AcknowledgeWithResult[TransactionId]](this, events, replyTo, _ => AcknowledgeWithResult(transactionId))
+
+              case None =>
+                new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
+                  AcknowledgeWithFailure(s"There are not enough funds in ${accountToDebit.accountId} to rollback transaction $transactionId. "))
+            }
+          case None =>
+            new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
+              AcknowledgeWithFailure(s"Transaction $transactionId does not exist. "))
+        }
     }
   }
 
@@ -117,11 +137,22 @@ case class CreatedWalletState(
       copy(
         wallet.copy(
         accounts = wallet.accounts.filterNot ( acc =>
-        acc.accountId == debited.accountId || acc.accountId == credited.accountId
+          acc.accountId == debited.accountId || acc.accountId == credited.accountId
         ) :+ updatedAccounts._1 :+ updatedAccounts._2,
         transactions = wallet.transactions :+ Transaction(transactionId, debited, credited, amount, LocalDateTime.now())
       )
     )
+
+    case TransactionRolledback(_, _, transactionId, accountToDebit, accountToCredit, amount, _) =>
+      val updatedAccounts: (Account, Account) = executeTransaction(accountToDebit, accountToCredit, amount).get
+      copy(
+        wallet.copy(
+        accounts = wallet.accounts.filterNot( acc =>
+          acc.accountId == accountToDebit.accountId || acc.accountId == accountToCredit.accountId
+          ) :+ updatedAccounts._1 :+ updatedAccounts._2,
+          transactions = wallet.transactions.filterNot(_.transactionId == transactionId)
+        )
+      )
   }
 
   private def debit(account: Account, amountToDebit: Money): Option[Account] = {
@@ -148,7 +179,7 @@ case class CreatedWalletState(
     for {
       accToDebit <- accounts.find(_.accountId == debitId)
       accToCredit <- accounts.find(_.accountId == creditId)
-      if accToDebit.balance.amount > amount.amount
+      if accToDebit.balance.amount >= amount.amount
     } yield (accToDebit, accToCredit)
   }
 }
