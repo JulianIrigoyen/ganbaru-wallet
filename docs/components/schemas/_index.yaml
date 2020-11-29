@@ -1,0 +1,2 @@
+ConfirmWallet:
+  $ref: "./ConfirmWallet.yaml"

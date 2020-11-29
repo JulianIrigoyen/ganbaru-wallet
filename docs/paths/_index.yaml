@@ -1,0 +1,3 @@
+/confirm:
+  post:
+    $ref: "./confirmWallet.yaml"

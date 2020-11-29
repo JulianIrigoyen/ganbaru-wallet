@@ -1,0 +1,15 @@
+description: Create a new Wallet
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: "../components/schemas/ConfirmWallet.yaml"
+responses:
+  '201':
+    description: the new Wallet Id
+    content:
+      application/json:
+        schema:
+          properties:
+            wallet_id:
+              type: string

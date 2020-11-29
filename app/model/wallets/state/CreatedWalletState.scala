@@ -48,7 +48,6 @@ case class CreatedWalletState(
         wallet.accounts.size match {
           case x if x == 0 => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Account]](replyTo,
               AcknowledgeWithFailure(s"There are now accounts for wallet ${wallet.walletId}"))
-          case x if x == 1 => new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(wallet.accounts.head))
           case _ =>
             val bulkiestAccount = wallet.accounts.maxBy(_.balance.amount)
             //println(bulkiestAccount)
