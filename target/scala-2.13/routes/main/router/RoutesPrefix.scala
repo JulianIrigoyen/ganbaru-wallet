@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:/Users/julian/Desktop/again/ganbaru-wallet/conf/routes
-// @DATE:Sat Nov 28 16:11:59 ART 2020
+// @DATE:Sun Nov 29 19:25:37 ART 2020
 
 
 package router {

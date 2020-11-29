@@ -1,5 +1,27 @@
+[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/rest/wallets/WalletResource.scala:180:42: abstract type pattern T is unchecked since it is eliminated by erasure[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m      case AcknowledgeWithResult(result: T) => onSuccess(result.asJson)[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m                                         ^[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/routes/main/router/Routes.scala:56:22: Auto-application to `()` is deprecated. Supply the empty argument list `()` explicitly to invoke method index,[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0mor remove the empty argument list from its definition (Java-defined methods are exempt).[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0mIn Scala 3, an unapplied method like this will be eta-expanded into a function.[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m    HomeController_0.index,[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m                     ^[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/routes/main/router/Routes.scala:78:73: Auto-application to `()` is deprecated. Supply the empty argument list `()` explicitly to invoke method index,[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0mor remove the empty argument list from its definition (Java-defined methods are exempt).[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0mIn Scala 3, an unapplied method like this will be eta-expanded into a function.[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m        controllers_HomeController_index0_invoker.call(HomeController_0.index)[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m                                                                        ^[0m[0J
+[0m[[0m[0minfo[0m] [0m[0mCleaning datadir [/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/scoverage-data][0m[0J
+[0m[[0m[0minfo[0m] [0m[0mBeginning coverage instrumentation[0m[0J
+[0m[[0m[0minfo[0m] [0m[0mInstrumentation completed [704 statements][0m[0J
+[0m[[0m[0minfo[0m] [0m[0mWrote instrumentation file [/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/scoverage-data/scoverage.coverage][0m[0J
+[0m[[0m[0minfo[0m] [0m[0mWill write measurement data to [/Users/julian/Desktop/again/ganbaru-wallet/target/scala-2.13/scoverage-data][0m[0J
 [0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/model/wallets/state/CreatedWalletState.scala:24:5: match may not be exhaustive.[0m[0J
 [0m[[0m[33mwarn[0m] [0m[0mIt would fail on the following input: CreateWalletWithNumber(_, _, _, _)[0m[0J
 [0m[[0m[33mwarn[0m] [0m[0m    command match {[0m[0J
 [0m[[0m[33mwarn[0m] [0m[0m    ^[0m[0J
-[0m[[0m[33mwarn[0m] [0m[0mone warning found[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m/Users/julian/Desktop/again/ganbaru-wallet/app/model/wallets/state/EmptyWalletState.scala:15:152: match may not be exhaustive.[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0mIt would fail on the following inputs: AddAccount(_, _, _, _), AttemptTransaction(_, _, _, _), Deposit(_, _, _), GetAccount(_, _), GetBulkiestAccount(_), GetWallet(_), ListTransactions(_, _), RollbackTransaction(_, _), Withdraw(_, _, _)[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m  override def applyCommand(command: WalletCommands.Command)(implicit context: ActorContext[WalletCommands.Command]): WalletState.EventsAnswerEffect = command match {[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m                                                                                                                                                       ^[0m[0J
+[0m[[0m[33mwarn[0m] [0m[0m5 warnings found[0m[0J
