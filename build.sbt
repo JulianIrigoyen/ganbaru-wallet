@@ -85,18 +85,14 @@ fork := true
 
 enablePlugins(PlayScala)
 
+coverallsToken := Some("yLByt1dqR19zlZFkaoDRa61VBj6sYpZmd")
+coverageEnabled := true
+
 sources in(Compile, doc) := Seq.empty
 
 Test / fork := true
 Test / javaOptions += "-XX:MaxRAMPercentage=80.0"
 Test / javaOptions += "-XX:+UseG1GC"
 Test / testOptions += Tests.Argument("-oD")
-lazy val raml2html = TaskKey[Unit]("removeCacheFile", "Deletes a cache file")
-
-raml2html := {
-  import sys.process._
-  println("Updating html documentation...")
-  Seq("sh", "update_html_doc.sh") !
-}
 
 //compile in Compile := (compile in Compile).dependsOn(raml2html).value
