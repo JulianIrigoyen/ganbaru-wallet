@@ -6,6 +6,7 @@ import model.AccountType.AccountType
 import model.{Account, AccountId, Money, TransactionId}
 import model.wallets.Wallet.WalletConfirmation
 
+/** This interface defines all the events that the Wallet persistent actor will write to the LevelDB journal . */
 
 object WalletEvents {
 
