@@ -1,9 +1,10 @@
 package model.wallets.state
 
-import akka.Done
+import java.time.LocalDateTime
+
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.ActorContext
-import model.{Account, AccountId, Money, TransactionId}
+import model.{Account, AccountId, Money, Transaction, TransactionId}
 import model.settings.GandaruServiceSettings
 import model.util.{AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, Withdraw}
@@ -24,7 +25,7 @@ case class CreatedWalletState(
 
       case GetWallet(replyTo) => new EventsAnswerReplyEffect(this, Nil, replyTo, _ => AcknowledgeWithResult(wallet))
 
-      case addAcc@AddAccount(cuit, accountType, currency, replyTo) =>
+      case addAcc @ AddAccount(cuit, accountType, currency, replyTo) =>
         println(s"Creating wallet account")
         wallet.accounts.collectFirst {
           case acc: Account if acc.accountType == accountType && acc.balance.currency == currency => acc
@@ -52,7 +53,7 @@ case class CreatedWalletState(
           case x if x == 1 => new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(wallet.accounts.head))
           case _ =>
             val bulkiestAccount = wallet.accounts.maxBy(_.balance.amount)
-            println(bulkiestAccount)
+            //println(bulkiestAccount)
             new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(bulkiestAccount))
         }
 
@@ -83,19 +84,20 @@ case class CreatedWalletState(
             AcknowledgeWithFailure(s"Account $accountId does not exist. "))
         }
 
-      case transact @ AttemptTransaction(debitId, creditId, amount, replyTo) =>
+      case transfer @ AttemptTransaction(debitId, creditId, amount, replyTo) =>
         validateTransaction(debitId, creditId, amount) match {
           case Some(accounts) =>
             val transactionId = TransactionId.newTransactionId
-            val events = List(transact.asEvent(wallet, transactionId, accounts._1, accounts._2))
-            new EventsAnswerReplyEffect[AcknowledgeWithResult[Done]](this, events, replyTo, _ => AcknowledgeWithResult(Done))
-          case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[Done]](replyTo,
+            val events = List(transfer.asEvent(wallet, transactionId, accounts._1, accounts._2))
+            new EventsAnswerReplyEffect[AcknowledgeWithResult[TransactionId]](this, events, replyTo, _ => AcknowledgeWithResult(transactionId))
+          case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
             AcknowledgeWithFailure(s"It is not possible to debit from $debitId to credit to $creditId. "))
         }
     }
   }
 
   override def applyEvent(event: WalletEvents.Event): WalletState = event match {
+
     case _: WalletCreated => this
 
     case AccountAdded(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened) =>
@@ -110,12 +112,16 @@ case class CreatedWalletState(
       val accountWithWithdrawal = debit(account, amount).get
       copy(wallet.copy(accounts = wallet.accounts.filterNot(_.accountId == account.accountId) :+ accountWithWithdrawal))
 
-    case TransactionValidated(_, _, _, debited, credited, amount, _) =>
+    case TransactionValidated(_, _, transactionId, debited, credited, amount, _) =>
       val updatedAccounts: (Account, Account) = executeTransaction(debited, credited, amount).get
-      copy(wallet.copy(accounts = wallet.accounts.filterNot ( acc =>
+      copy(
+        wallet.copy(
+        accounts = wallet.accounts.filterNot ( acc =>
         acc.accountId == debited.accountId || acc.accountId == credited.accountId
-        ) :+ updatedAccounts._1 :+ updatedAccounts._2
-      ))
+        ) :+ updatedAccounts._1 :+ updatedAccounts._2,
+        transactions = wallet.transactions :+ Transaction(transactionId, debited, credited, amount, LocalDateTime.now())
+      )
+    )
   }
 
   private def debit(account: Account, amountToDebit: Money): Option[Account] = {

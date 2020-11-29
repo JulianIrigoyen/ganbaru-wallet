@@ -6,10 +6,10 @@ import akka.util.Timeout
 import com.google.inject.Inject
 import model.AccountType.AccountType
 import model.Money.Currency
-import model.{Account, AccountId, Money, WalletFactory}
+import model.{Account, AccountId, Money, TransactionId, WalletFactory}
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, Deposit, GetAccount, GetBulkiestAccount, GetWallet, Withdraw}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, Withdraw}
 import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
@@ -32,8 +32,11 @@ object WalletResource {
   implicit val acpw = JsonMapper.writesOf[AccountPost]
   implicit val accIdw = JsonMapper.writesOf[AccountId]
   implicit val accw = JsonMapper.writesOf[Account]
+  implicit val tridw = JsonMapper.writesOf[TransactionId]
   implicit val moneyr = JsonMapper.readsOf[MoneyPatch]
   implicit val moneyw = JsonMapper.writesOf[MoneyPatch]
+  implicit val trpr = JsonMapper.readsOf[TransferPost]
+  implicit val trpw = JsonMapper.writesOf[TransferPost]
 
   case class TestPost(id: Int, cuit: String)
 
@@ -62,6 +65,17 @@ object WalletResource {
     def toWithdrawCommand(accountId: AccountId, replyTo: ActorRef[Acknowledge[Account]]): Withdraw =
       Withdraw(accountId, Money(amount, currency), replyTo)
 
+  }
+
+  case class TransferPost(
+                           debit: String,
+                           credit: String,
+                           amount: BigDecimal,
+                           currency: Currency
+                          ) {
+    def toCommand(replyTo: ActorRef[Acknowledge[TransactionId]]): AttemptTransaction = {
+      AttemptTransaction(AccountId(debit), AccountId(credit), Money(amount, currency), replyTo)
+    }
   }
 }
 
@@ -134,6 +148,13 @@ class WalletResource @Inject()(
     walletProvider.entityFor(walletId)
       .ask[Acknowledge[Account]](replyTo => moneyRequest.toWithdrawCommand(accountId, replyTo))
       .map(acknowledgement => toResult[Account](acknowledgement, Ok(_)))
+  }
+
+  def transfer(walletId: WalletId): Action[TransferPost] = Action.async(parse.json[TransferPost]) { request =>
+    val transferRequest = request.body
+    walletProvider.entityFor(walletId)
+      .ask[Acknowledge[TransactionId]](replyTo => transferRequest.toCommand(replyTo))
+      .map(acknowledgement => toResult[TransactionId](acknowledgement, Created(_)))
   }
 
 

@@ -76,7 +76,7 @@ object WalletCommands {
                                        debit: AccountId,
                                        credit: AccountId,
                                        amount: Money,
-                                       replyTo: ActorRef[Acknowledge[Done]]) extends Command {
+                                       replyTo: ActorRef[Acknowledge[TransactionId]]) extends Command {
     def asEvent(wallet: CreatedWallet, tranasctionId: TransactionId, debit: Account, credit: Account): TransactionValidated = {
       TransactionValidated(wallet.walletId, wallet.gandaruClientId, tranasctionId,  debit, credit, amount, LocalDateTime.now())
     }

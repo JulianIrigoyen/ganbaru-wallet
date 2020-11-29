@@ -12,6 +12,7 @@ import play.api.mvc.Action
 class WalletRouter @Inject() (resource: WalletResource) extends SimpleRouter {
 
   override def routes: Routes = {
+
     case POST(p"/test") => resource.test()
 
     case POST(p"/confirm") => resource.confirmWallet()
@@ -23,6 +24,8 @@ class WalletRouter @Inject() (resource: WalletResource) extends SimpleRouter {
 
     case PATCH(p"/$walletId/accounts/$accountId/deposit") => resource.deposit(WalletId(walletId), AccountId(accountId))
     case PATCH(p"/$walletId/accounts/$accountId/withdraw") => resource.withdraw(WalletId(walletId), AccountId(accountId))
+
+    case POST(p"/$walletId/transfer") => resource.transfer(WalletId(walletId))
 
   }
 }

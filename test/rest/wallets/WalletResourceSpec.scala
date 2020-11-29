@@ -81,7 +81,21 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     status(result) mustBe OK
   }
 
-  "create a transaction between to accounts in a wallet" in {
+  "properly transfer" in {
+    val walletId = createWallet
+    val spotAccountId = createSpotAccount(walletId)
+    val marginAccountId = createMarginAccount(walletId)
+    val p2pAccountId = createP2PAccount(walletId)
+
+    depositToWalletAccount(walletId, spotAccountId, 10000)
+    depositToWalletAccount(walletId, marginAccountId, 5000)
+
+   /* val requestBody = Json.parse(transferRequest(spotAccountId.id, marginAccountId.id, 5000))
+    val firstTransferRequest = FakeRequest(POST, s"/api/wallets/$walletId/transfer").withJsonBody(requestBody)
+    val firstTransferResult = route(app, firstTransferRequest).get
+    status(firstTransferResult) mustBe CREATED
+
+    getWalletJson(walletId)*/
 
   }
 
@@ -101,7 +115,7 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
   private def getWalletJson(walletId: WalletId) = {
     val getRequest = FakeRequest(GET, s"/api/wallets/$walletId")
     val wallet = route(app, getRequest).get
-    //println(Json.prettyPrint(contentAsJson(wallet)))
+    println(Json.prettyPrint(contentAsJson(wallet)))
     status(wallet) mustBe OK
     contentAsJson(wallet)
   }
@@ -126,6 +140,16 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     AccountId((contentAsJson(account) \ "id").as[String])
   }
 
+  private def createP2PAccount(walletId: WalletId) = {
+    val accountRequestBody = loadRequest(p2pAccountRequest)
+    val postRequest = FakeRequest(POST, s"/api/wallets/$walletId/account").withJsonBody(Json.parse(accountRequestBody))
+    val account = route(app, postRequest).get
+    //println(Json.prettyPrint(contentAsJson(account)))
+    status(account) mustBe CREATED
+
+    AccountId((contentAsJson(account) \ "id").as[String])
+  }
+
   private def depositToWalletAccount(walletId: WalletId, accountId: AccountId, amount: Int) = {
     val jsonString = """{ "amount": """ + amount + """, "currency": "ARS" }"""
     val depositRequest = FakeRequest(PATCH, s"/api/wallets/$walletId/accounts/$accountId/deposit")
@@ -133,6 +157,10 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
 
     val deposit = route(app, depositRequest).get
     status(deposit) mustBe OK
+  }
+
+  def transferRequest(debitId: String, creditId: String, amount: Int) = {
+    """ { 'debit': """ + debitId + """, 'credit': """ + creditId + """, 'amount': """ + amount + """, 'currency': 'ARS'  }"""
   }
 
   private def withdrawFromWalletAccount(walletId: WalletId, accountId: AccountId, amount: Int) = {
