@@ -41,7 +41,8 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
   "add an account to a wallet " in {
     val walletId = createWallet
     createSpotAccount(walletId)
-    getWalletJson(walletId).\("accounts").get.as[JsArray].value.size mustBe 1
+    getWalletJson(walletId)
+      .\("accounts").get.as[JsArray].value.size mustBe 1
   }
 
   "get an account from wallet" in {
@@ -56,14 +57,14 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
 
   "deposit to a wallet account" in {
     val walletId = createWallet
-    val accountId = createSpotAccount(walletId)
+    val accountId = AccountId(createSpotAccount(walletId))
 
     depositToWalletAccount(walletId, accountId, 10000)
   }
 
   "withdraw from a wallet account" in {
     val walletId = createWallet
-    val accountId = createSpotAccount(walletId)
+    val accountId = AccountId(createSpotAccount(walletId))
     depositToWalletAccount(walletId, accountId, 10000)
     withdrawFromWalletAccount(walletId, accountId, 9788)
   }
@@ -73,29 +74,66 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     val spotAccountId = createSpotAccount(walletId)
     val marginAccountId  = createMarginAccount(walletId)
 
-    depositToWalletAccount(walletId, spotAccountId, 10000)
-    depositToWalletAccount(walletId, marginAccountId, 10001)
+    depositToWalletAccount(walletId, AccountId(spotAccountId), 10000)
+    depositToWalletAccount(walletId, AccountId(marginAccountId), 10001)
 
     val request = FakeRequest(GET, s"/api/wallets/$walletId/bulkiest")
     val result = route(app, request).get
     status(result) mustBe OK
   }
 
-  "properly transfer" in {
+  "post a transfer" in {
     val walletId = createWallet
     val spotAccountId = createSpotAccount(walletId)
     val marginAccountId = createMarginAccount(walletId)
-    val p2pAccountId = createP2PAccount(walletId)
 
-    depositToWalletAccount(walletId, spotAccountId, 10000)
-    depositToWalletAccount(walletId, marginAccountId, 5000)
+    depositToWalletAccount(walletId, AccountId(spotAccountId), 10000)
 
-   /* val requestBody = Json.parse(transferRequest(spotAccountId.id, marginAccountId.id, 5000))
+    val requestBody = Json.parse(transferRequest(spotAccountId, marginAccountId, 5000))
     val firstTransferRequest = FakeRequest(POST, s"/api/wallets/$walletId/transfer").withJsonBody(requestBody)
     val firstTransferResult = route(app, firstTransferRequest).get
     status(firstTransferResult) mustBe CREATED
 
-    getWalletJson(walletId)*/
+    getWalletJson(walletId)
+  }
+
+  "list transactions" in {
+    val walletId = createWallet
+    val spotAccountId = createSpotAccount(walletId)
+    val marginAccountId = createMarginAccount(walletId)
+
+    depositToWalletAccount(walletId, AccountId(spotAccountId), 10000)
+
+    val requestBody = Json.parse(transferRequest(spotAccountId, marginAccountId, 5000))
+    val firstTransferRequest = FakeRequest(POST, s"/api/wallets/$walletId/transfer").withJsonBody(requestBody)
+    val firstTransferResult = route(app, firstTransferRequest).get
+    status(firstTransferResult) mustBe CREATED
+
+    val secondTransferRequest = FakeRequest(POST, s"/api/wallets/$walletId/transfer").withJsonBody(requestBody)
+    val secondTransferResult = route(app, secondTransferRequest).get
+    status(secondTransferResult) mustBe CREATED
+
+    val request = FakeRequest(GET, s"/api/wallets/$walletId/accounts/$spotAccountId/list-tx")
+    val result = route(app, request).get
+    status(result) mustBe OK
+  }
+
+  "rollback transactions" in {
+    val walletId = createWallet
+    val spotAccountId = createSpotAccount(walletId)
+    val marginAccountId = createMarginAccount(walletId)
+
+    depositToWalletAccount(walletId, AccountId(spotAccountId), 10000)
+
+    val requestBody = Json.parse(transferRequest(spotAccountId, marginAccountId, 5000))
+    val firstTransferRequest = FakeRequest(POST, s"/api/wallets/$walletId/transfer").withJsonBody(requestBody)
+    val firstTransferResult = route(app, firstTransferRequest).get
+    status(firstTransferResult) mustBe CREATED
+    val txId = contentAsJson(firstTransferResult).\("id").as[String]
+
+    val deleteRequest = FakeRequest(DELETE, s"/api/wallets/$walletId/rollback/$txId")
+    val result = route(app, deleteRequest).get
+    status(result) mustBe ACCEPTED
 
   }
 
@@ -107,7 +145,6 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     val jsonString = """{ "id": "222", "cuit": "20391718068" }"""
     val request = FakeRequest(POST, s"/api/wallets/confirm").withBody(Json.parse(jsonString))
     val result = route(app, request).get
-    //println(Json.prettyPrint(contentAsJson(result)))
     status(result) mustBe CREATED
     WalletId((contentAsJson(result) \ "wallet_id").as[String])
   }
@@ -127,7 +164,7 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     //println(Json.prettyPrint(contentAsJson(account)))
     status(account) mustBe CREATED
 
-    AccountId((contentAsJson(account) \ "id").as[String])
+    (contentAsJson(account) \ "id").as[String]
   }
 
   private def createMarginAccount(walletId: WalletId) = {
@@ -137,7 +174,7 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
     //println(Json.prettyPrint(contentAsJson(account)))
     status(account) mustBe CREATED
 
-    AccountId((contentAsJson(account) \ "id").as[String])
+    (contentAsJson(account) \ "id").as[String]
   }
 
   private def createP2PAccount(walletId: WalletId) = {
@@ -160,7 +197,12 @@ class WalletResourceSpec extends PlaySpec with GuiceOneAppPerSuite with BeforeAn
   }
 
   def transferRequest(debitId: String, creditId: String, amount: Int) = {
-    """ { 'debit': """ + debitId + """, 'credit': """ + creditId + """, 'amount': """ + amount + """, 'currency': 'ARS'  }"""
+    """ {
+      |"debit": """.stripMargin + "\"" + debitId + "\"" + """ ,
+      |"credit": """.stripMargin + "\"" + creditId + "\"" + """ ,
+      |"amount": """.stripMargin + "\"" + amount + "\"" + """ ,
+      |"currency": "ARS"
+      |}""".stripMargin
   }
 
   private def withdrawFromWalletAccount(walletId: WalletId, accountId: AccountId, amount: Int) = {
