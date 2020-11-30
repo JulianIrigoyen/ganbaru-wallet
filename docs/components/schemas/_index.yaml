@@ -1,2 +1,20 @@
 ConfirmWallet:
   $ref: "./ConfirmWallet.yaml"
+
+CreateAccount:
+  $ref: "./CreateAccount.yaml"
+
+CreatedWallet:
+  $ref: "./CreatedWallet.yaml"
+
+Account:
+  $ref: "./Account.yaml"
+
+Transaction:
+  $ref: "./Transaction.yaml"
+
+TransactionRequest:
+  $ref: "./TransactionRequest.yaml"
+
+Money:
+  $ref: "./Money.yaml"

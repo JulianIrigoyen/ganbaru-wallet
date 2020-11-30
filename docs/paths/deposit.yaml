@@ -1,0 +1,14 @@
+description: Deposit to Account in Wallet
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: "../components/schemas/Money.yaml"
+
+responses:
+  '202':
+    description: Deposit Accepted
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas/Account.yaml"

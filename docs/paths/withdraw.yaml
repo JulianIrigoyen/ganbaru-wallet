@@ -1,0 +1,14 @@
+description: Withdraw from Account in Wallet
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: "../components/schemas/Money.yaml"
+
+responses:
+  '202':
+    description: Withdrawal Accepted
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas/Account.yaml"

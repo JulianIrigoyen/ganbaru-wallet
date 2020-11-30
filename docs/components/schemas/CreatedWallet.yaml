@@ -1,0 +1,27 @@
+type: object
+properties:
+  wallet_id:
+    type: string
+  ganbaru_client_id:
+    type: string
+  wallet_number:
+    type: number
+  accounts:
+    type: array
+    items:
+      $ref: "./Account.yaml"
+  transactions:
+    type: array
+    items:
+      $ref: "./Transaction.yaml"
+  timestamp:
+    type: string
+
+required:
+  - wallet_id
+  - ganbaru_client_id
+  - wallet_number
+  - accounts
+  - transactions
+  - timestamp
+

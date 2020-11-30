@@ -1,0 +1,8 @@
+description: Get the Bulkiest Account in a Wallet
+responses:
+  '200':
+    description: Ok
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas/Account.yaml"
