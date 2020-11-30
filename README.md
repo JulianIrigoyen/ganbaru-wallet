@@ -47,7 +47,7 @@ Test Driven Design was part of this project (and should be of any.) *CircleCI* w
 In hand with TDD, coveralls and scoverage tools were configured to keep track of code coverage and to generate coverage reports. 
 
 ### OpenApi 3.0.2
-Documentation create with OpenApi spec. Files located in /docs directory and bundled with bundle_documentation.sh.
+[Documentation](https://ganbaru-wallet.herokuapp.com/v1/doc) created with OpenApi spec. Files located in /docs directory and bundled with bundle_documentation.sh.
 
 ### Running Locally
 To run the Ganbaru Wallet App, clone the repository and execute
@@ -56,3 +56,7 @@ sbt run
 ```
 
 The service can be easily tested using the [Postman Collection here](https://gofile.io/d/AFI7RL)
+TODOS - 
+[x] Even though the application is deployed in Heroku, making HTTP requests results in failure. This is because there is no persistence configured for production. 
+- [ ] Next step with be to implement persistence with reactive mongo and [null-vector](https://github.com/null-vector/akka-reactivemongo-plugin)
+- [ ] Once persistence is working, implementing the [Read side](https://cqrs.nu/Faq/read-sides#:~:text=What%20is%20a%20read%20side,be%20made%20on%20that%20model.) of the application would be the next logical step. 
