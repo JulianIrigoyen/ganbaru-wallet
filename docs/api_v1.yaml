@@ -3,7 +3,7 @@ info:
   title: Ganbaru Wallet
   version: "1.0"
 servers:
-  - url: https://ganbaru-wallet.herokuapp.com/v1
+  - url: https://julianirigoyen.github.io/ganbaru-wallet/
 paths:
   $ref: "./paths/_index.yaml"
 components:
