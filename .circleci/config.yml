@@ -1,0 +1,43 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+sc: &save_cache
+  save_cache:
+    paths:
+      - "/home/circleci/.ivy2/cache"
+      - "/home/circleci/.sbt"
+    key: v1-dependencies-{{ checksum "build.sbt" }}
+
+rc: &restore_cache
+  restore_cache:
+    keys:
+      - v1-dependencies-{{ checksum "build.sbt" }}
+      - v1-dependencies
+# Use a package of configuration called an orb.
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.4.1
+
+executors:
+  sbt:
+    docker:
+      - image: circleci/openjdk:13.0.2-jdk-buster
+  ecr:
+    docker:
+      - image: circleci/openjdk:13.0.2-jdk-buster
+
+jobs:
+  build:
+    executor: sbt
+    steps:
+      - checkout
+      - <<: *restore_cache
+      - run: sbt clean coverage test coverageReport
+      - run: sbt coveralls || true
+      - <<: *save_cache
+
+workflows:
+  version: 2.1
+  build-test-and-deploy:
+    jobs:
+      - build
+
