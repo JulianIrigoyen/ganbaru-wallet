@@ -1,0 +1,10 @@
+description: List Transactions by Account Id
+responses:
+  '200':
+    description: Ok
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: "../components/schemas/Transaction.yaml"

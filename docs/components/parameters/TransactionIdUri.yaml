@@ -1,0 +1,7 @@
+in: path
+name: transaction_id
+schema:
+  type: string
+
+required: true
+description: A Transaction's Id.

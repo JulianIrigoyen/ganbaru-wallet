@@ -1,0 +1,32 @@
+type: object
+properties:
+  wallet_id:
+    type: string
+  ganbaru_client_id:
+    type: string
+  account_id:
+    type: string
+  cuit:
+    type: string
+  account_type:
+    type:
+    enum:
+      - Spot
+      - Margin
+      - Futures
+      - P2P
+      - Pool
+  balance:
+    $ref: "Money.yaml"
+  date_opened:
+    type: string
+
+required:
+  - wallet_id
+  - ganbaru_client_id
+  - account_id
+  - cuit
+  - account_type
+  - balance
+  - date_opened
+

@@ -1,0 +1,14 @@
+type: object
+properties:
+  amount:
+    type: number
+  currency:
+    type:
+    enum:
+      - ARS
+      - BRL
+      - CLP
+      - COP
+required:
+  - amount
+  - currency

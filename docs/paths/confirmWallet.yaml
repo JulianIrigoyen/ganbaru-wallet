@@ -6,10 +6,12 @@ requestBody:
         $ref: "../components/schemas/ConfirmWallet.yaml"
 responses:
   '201':
-    description: the new Wallet Id
+    description: Wallet Created
     content:
       application/json:
         schema:
+          type: object
           properties:
             wallet_id:
               type: string
+              description: The ID of the created Wallet.

@@ -1,0 +1,8 @@
+WalletIdUri:
+  $ref: "./WalletIdUri.yaml"
+
+AccountIdUri:
+  $ref: "./AccountIdUri.yaml"
+
+TransactionIdUri:
+  $ref: "./TransactionIdUri.yaml"

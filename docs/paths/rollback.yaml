@@ -1,0 +1,12 @@
+description: Rollback a Transaction
+responses:
+  '202':
+    description: Rollback Accepted
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            transaction_id:
+              type: string
+              description: The ID of the rolled back Transaction.
