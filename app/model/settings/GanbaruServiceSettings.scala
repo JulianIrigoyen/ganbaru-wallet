@@ -7,11 +7,11 @@ import akka.actor.typed.ActorRef
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior}
 import model.util.AcknowledgeWithResult
-import model.wallets.GandaruClientId
+import model.wallets.GanbaruClientId
 import org.nullvector.{EventAdapter, EventAdapterFactory}
 import reactivemongo.api.bson.MacroConfiguration
 
-object GandaruServiceSettings {
+object GanbaruServiceSettings {
 
   sealed trait Command
 
@@ -23,16 +23,16 @@ object GandaruServiceSettings {
 
   type State = Map[UUID, String]
 
-  def apply(gandaruClientId: GandaruClientId): EventSourcedBehavior[GandaruServiceSettings.Command, Event, State] = EventSourcedBehavior(
-    persistenceId = persistenceId(gandaruClientId),
+  def apply(ganbaruClientId: GanbaruClientId): EventSourcedBehavior[GanbaruServiceSettings.Command, Event, State] = EventSourcedBehavior(
+    persistenceId = persistenceId(ganbaruClientId),
     emptyState = Map.empty,
-    commandHandler = commandHandler(gandaruClientId),
+    commandHandler = commandHandler(ganbaruClientId),
     eventHandler = eventHandler()
   )
 
-  def persistenceId(gandaruClientId: GandaruClientId): PersistenceId = PersistenceId("Settings", gandaruClientId.id)
+  def persistenceId(ganbaruClientId: GanbaruClientId): PersistenceId = PersistenceId("Settings", ganbaruClientId.id)
 
-  def commandHandler(id: GandaruClientId) :(State, Command) => Effect[Event, State] = (state, command) =>
+  def commandHandler(id: GanbaruClientId) :(State, Command) => Effect[Event, State] = (state, command) =>
     command match {
       case AddAttribute(attribute, ackTo) => Effect.persist[Event, State](AttributeAddedOrUpdated(attribute))
         .thenReply(ackTo)(_ => AcknowledgeWithResult(Done))

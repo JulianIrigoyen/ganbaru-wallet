@@ -14,51 +14,51 @@ object WalletEvents {
 
   final case class WalletCreated(
                                   walletId: WalletId,
-                                  gandaruClientId: GandaruClientId,
+                                  ganbaruClientId: GanbaruClientId,
                                   walletNumber: WalletNumber,
                                   confirmation: WalletConfirmation,
                                   timestamp: LocalDateTime
                                 ) extends Event
 
   final case class AccountAdded(
-                               walletId: WalletId,
-                               gandaruClientId: GandaruClientId,
-                               accountId: AccountId,
-                               cuit: String,
-                               accountType: AccountType,
-                               balance: Money,
-                               dateOpened: LocalDateTime
+                                 walletId: WalletId,
+                                 ganbaruClientId: GanbaruClientId,
+                                 accountId: AccountId,
+                                 cuit: String,
+                                 accountType: AccountType,
+                                 balance: Money,
+                                 dateOpened: LocalDateTime
                                ) extends Event
 
   final case class Deposited(
-                            walletId: WalletId,
-                            gandaruClientId: GandaruClientId,
-                            account: Account,
-                            amount: Money,
-                            timestamp: LocalDateTime
+                              walletId: WalletId,
+                              ganbaruClientId: GanbaruClientId,
+                              account: Account,
+                              amount: Money,
+                              timestamp: LocalDateTime
                             ) extends Event
 
   final case class Withdrew(
-                           walletId: WalletId,
-                           gandaruClientId: GandaruClientId,
-                           account: Account,
-                           amount: Money,
-                           timestamp: LocalDateTime
+                             walletId: WalletId,
+                             ganbaruClientId: GanbaruClientId,
+                             account: Account,
+                             amount: Money,
+                             timestamp: LocalDateTime
                            ) extends Event
 
   final case class TransactionValidated(
-                                       walletId: WalletId,
-                                       gandaruClientId: GandaruClientId,
-                                       transactionId: TransactionId,
-                                       debited: Account,
-                                       credited: Account,
-                                       amount: Money,
-                                       timestamp: LocalDateTime
+                                         walletId: WalletId,
+                                         ganbaruClientId: GanbaruClientId,
+                                         transactionId: TransactionId,
+                                         debited: Account,
+                                         credited: Account,
+                                         amount: Money,
+                                         timestamp: LocalDateTime
                                        ) extends Event
 
   final case class TransactionRolledback(
                                           walletId: WalletId,
-                                          gandaruClientId: GandaruClientId,
+                                          ganbaruClientId: GanbaruClientId,
                                           transactionId: TransactionId,
                                           accountToDebit: Account,
                                           accountToCredit: Account,
