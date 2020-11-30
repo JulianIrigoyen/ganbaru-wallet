@@ -1,0 +1,17 @@
+description: Add a new Account to a Wallet
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: "../components/schemas/CreateAccount.yaml"
+responses:
+  '201':
+    description: Account Created
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            account_id:
+              type: string
+              description: The ID of the created Account.

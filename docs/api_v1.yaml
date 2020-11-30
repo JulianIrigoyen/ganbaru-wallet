@@ -7,5 +7,7 @@ servers:
 paths:
   $ref: "./paths/_index.yaml"
 components:
+  parameters:
+    $ref: "./components/parameters/_index.yaml"
   schemas:
     $ref: "./components/schemas/_index.yaml"

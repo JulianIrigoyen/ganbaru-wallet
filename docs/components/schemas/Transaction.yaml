@@ -1,0 +1,24 @@
+type: object
+properties:
+  transaction_id:
+    type: string
+  credited:
+    type: object
+    schema:
+      $ref: "./Account.yaml"
+  debited:
+      $ref: "./Account.yaml"
+  amount:
+    $ref: "Money.yaml"
+  created:
+    type: string
+
+required:
+  - transaction_id
+  - credited
+  - debited
+  - amount
+  - created
+
+
+

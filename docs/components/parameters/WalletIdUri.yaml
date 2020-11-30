@@ -1,0 +1,7 @@
+in: path
+name: wallet_id
+schema:
+  type: string
+
+required: true
+description: A Wallet Id.
