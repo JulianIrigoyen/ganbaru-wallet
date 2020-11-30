@@ -19,7 +19,7 @@ import model.WalletFactory.ConfirmWallet
 import model.settings.GanbaruServiceSettings
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, CreateWalletWithNumber, Deposit, GetAccount, GetBulkiestAccount, Withdraw}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, CreateWalletWithNumber, Deposit, GetAccount, GetBulkiestAccount, RollbackTransaction, Withdraw}
 import testing.tool.EntityProviderProbe
 
 import scala.concurrent.duration.DurationInt
@@ -74,6 +74,7 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     getWallet(wallet).accounts.head.balance.amount shouldBe 10000
   }
+
   it should "properly withdraw from an account in a wallet" in {
     val probe = probeRef[Acknowledge[Account]]
     val wallet = createWalletAndShootCommands(WalletId(randomId), List.empty)
@@ -126,17 +127,56 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     wallet ! Deposit(poolId,    Money(10, ARS), acctProbe.ref)
     wallet ! Deposit(futuresId, Money(10, ARS), acctProbe.ref)
 
+    //Using expectMessage locks the thread.
+    wallet ! AttemptTransaction(p2pId, spotId, Money(1, ARS), txProbe.ref)
+    //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
+
+    wallet ! AttemptTransaction(marginId, spotId, Money(1, ARS), txProbe.ref)
+    //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
+
+    wallet ! AttemptTransaction(poolId, spotId, Money(1, ARS), txProbe.ref)
+    //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
+
+    wallet ! AttemptTransaction(futuresId, spotId, Money(100, ARS), txProbe.ref)
+    //txProbe.expectMessageType[AcknowledgeWithFailure[TransactionId]]
+
+    wallet ! AttemptTransaction(spotId, poolId, Money(13, ARS), txProbe.ref)
+    //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
+
+    wallet ! AttemptTransaction(poolId, p2pId, Money(13, ARS), txProbe.ref)
+    //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
+
+    wallet ! AttemptTransaction(p2pId, futuresId, Money(22, ARS), txProbe.ref)
+    //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
+  }
+
+  it should "rollback a transaction" in {
+    val acctProbe = probeRef[Acknowledge[Account]]
+    val txProbe = probeRef[Acknowledge[TransactionId]]
+    val walletId = WalletId(randomId)
+    val wallet = createWalletAndShootCommands(walletId, List.empty)
+
+    val p2pId     = addAccountToWallet(wallet, randomId, AccountType.P2P)
+    val spotId    = addAccountToWallet(wallet, randomId, AccountType.Spot)
+
+    wallet ! Deposit(p2pId,   Money(10, ARS), acctProbe.ref)
 
     wallet ! AttemptTransaction(p2pId, spotId, Money(1, ARS), txProbe.ref)
-    txProbe.expectNoMessage()
-    wallet ! AttemptTransaction(marginId, spotId, Money(1, ARS), txProbe.ref)
-    wallet ! AttemptTransaction(poolId, spotId, Money(1, ARS), txProbe.ref)
-    wallet ! AttemptTransaction(futuresId, spotId, Money(1, ARS), txProbe.ref)
+    val txId = txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]].get
+
+    println(getWallet(wallet))
+
+    wallet ! RollbackTransaction(TransactionId("sarasa"), txProbe.ref)
+    txProbe.receiveMessage().toString.contains("does not exist") shouldBe true
+
+    wallet ! RollbackTransaction(txId, txProbe.ref)
+    probeRef.expectNoMessage()
+
+
 
 
 
   }
-  it should "rollback a transaction" in {}
   it should "list transactions" in {}
 
   def createWalletAndShootCommands(walletId: WalletId, commands: List[WalletCommands.Command]) = {
