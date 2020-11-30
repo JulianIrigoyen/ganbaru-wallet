@@ -1,0 +1,20 @@
+description: Transfer between Accounts
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: "../components/schemas/TransactionRequest.yaml"
+
+responses:
+  '201':
+    description: Transaction Created
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            transaction_id:
+              type: string
+              description: The ID of the created Transaction.
+
+

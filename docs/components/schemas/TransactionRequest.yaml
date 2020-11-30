@@ -1,0 +1,24 @@
+type: object
+properties:
+  debit:
+    description: The ID of the Account to debit from.
+    type: string
+  credit:
+    description: The ID of the Account to credit to.
+    type: string
+  amount:
+    type: number
+  currency:
+    description: The currency for this transaction.
+    type:
+    enum:
+      - ARS
+      - BRL
+      - CLP
+      - COP
+
+required:
+  - debit
+  - credit
+  - amount
+  - currency

@@ -1,3 +1,63 @@
 /confirm:
   post:
     $ref: "./confirmWallet.yaml"
+
+/{wallet_id}:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+  get:
+    $ref: "./getWallet.yaml"
+
+/{wallet_id}/account:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+  post:
+    $ref: "./addAccount.yaml"
+
+/{wallet_id}/account/{account_id}:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+    - $ref: "../components/parameters/AccountIdUri.yaml"
+  get:
+    $ref: "./getAccount.yaml"
+
+/{wallet_id}/account/bulkiest:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+  get:
+    $ref: "./getBulkiestAccount.yaml"
+
+/{wallet_id}/account/{account_id}/deposit:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+    - $ref: "../components/parameters/AccountIdUri.yaml"
+  patch:
+    $ref: "./deposit.yaml"
+
+/{wallet_id}/account/{account_id}/withdraw:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+    - $ref: "../components/parameters/AccountIdUri.yaml"
+  patch:
+    $ref: "./withdraw.yaml"
+
+/{wallet_id}/transfer:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+  post:
+    $ref: "./transfer.yaml"
+
+/{wallet_id}/rollback/{transaction_id}:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+    - $ref: "../components/parameters/TransactionIdUri.yaml"
+  delete:
+    $ref: "./rollback.yaml"
+
+/{wallet_id}/account/{account_id}/list-tx:
+  parameters:
+    - $ref: "../components/parameters/WalletIdUri.yaml"
+    - $ref: "../components/parameters/AccountIdUri.yaml"
+  get:
+    $ref: "./listTx.yaml"
+

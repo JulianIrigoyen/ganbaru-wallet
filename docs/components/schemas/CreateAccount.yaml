@@ -1,0 +1,27 @@
+properties:
+  cuit:
+    description: Unique tributary key
+    type: string
+  account_type:
+    description: The type of account that wants to be opened
+    type:
+    enum:
+      - Spot
+      - Margin
+      - Futures
+      - P2P
+      - Pool
+  currency:
+    description: The currency of the account that wants to be opened
+    type:
+    enum:
+      - ARS
+      - BRL
+      - CLP
+      - COP
+
+required:
+  - cuit
+  - account_type
+  - currency
+
