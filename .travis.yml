@@ -6,4 +6,11 @@ rvm:
 deploy:
   provider: heroku
   api_key:
-    secure: "YOUR ENCRYPTED API KEY"
+    secure: "8c6f059c-e370-4984-badc-38b4d81d4d79"
+  app:
+    master: ganbaru-wallet-staging
+  run:
+    - "sbt clean coverage test coverageReport"
+    - "sbt coveralls || true"
+    -  "sh bundle_documentation.sh"
+  strategy: git
