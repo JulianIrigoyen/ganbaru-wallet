@@ -5,15 +5,11 @@ jdk: openjdk8
 scala:
   - 2.13.3
 
-deploy:
-  provider: heroku
-  api_key:
-    secure: "8c6f059c-e370-4984-badc-38b4d81d4d79"
-  app:
-    master: ganbaru-wallet-staging
-  strategy: git
-
 script:
   - sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
   - sbt ++$TRAVIS_SCALA_VERSION coveralls || true
   - sh bundle_documentation.sh
+
+notifications:
+  email:
+    - martinirigoyenj17@gmail.com
