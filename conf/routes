@@ -3,3 +3,4 @@
 # ~~~~
 
 -> /api/wallets 		rest.wallets.WalletRouter
+GET /v1/doc         		controllers.Assets.at(path="/public/docs", file="api_v1.html")
