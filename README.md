@@ -1,6 +1,6 @@
 [![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://app.circleci.com/pipelines/github/JulianIrigoyen/ganbaru-wallet)
 [![Coverage Status](https://coveralls.io/repos/github/JulianIrigoyen/ganbaru-wallet/badge.svg?branch=master)](https://coveralls.io/github/JulianIrigoyen/ganbaru-wallet?branch=master)
-# Ganbaru Wallet Application
+# [Ganbaru Wallet Application](https://ganbaru-wallet.herokuapp.com/v1/doc)
 ###### Daruma Project
 The _Ganbaru Wallet_ app allows users to register wallets with multiple accounts, deposit and withdraw money to and from them and to create transactions among them. 
 
@@ -48,4 +48,11 @@ In hand with TDD, coveralls and scoverage tools were configured to keep track of
 
 ### OpenApi 3.0.2
 Documentation create with OpenApi spec. Files located in /docs directory and bundled with bundle_documentation.sh.
-https://ganbaru-wallet.herokuapp.com/v1/doc
+
+### Running Locally
+To run the Ganbaru Wallet App, clone the repository and execute
+```
+sbt run
+```
+
+The service can be easily tested using the [Postman Collection here](https://gofile.io/d/AFI7RL)
