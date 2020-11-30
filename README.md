@@ -1,5 +1,5 @@
-[![Coverage Status](https://coveralls.io/repos/github/JulianIrigoyen/ganbaru-wallet/badge.svg?branch=master)](https://coveralls.io/github/JulianIrigoyen/ganbaru-wallet?branch=master)
 [![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
+[![Coverage Status](https://coveralls.io/repos/github/JulianIrigoyen/ganbaru-wallet/badge.svg?branch=master)](https://coveralls.io/github/JulianIrigoyen/ganbaru-wallet?branch=master)
 # Gandaru Wallet Application
 ###### Daruma Project
 The _Gandaru Wallet_ app allows users to register wallets with multiple accounts, deposit and withdraw money to and from them and to create transactions among them. 
