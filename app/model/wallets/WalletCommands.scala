@@ -16,13 +16,13 @@ object WalletCommands {
   sealed trait Command
 
   final case class CreateWalletWithNumber(
-                                 gandaruClientId: GandaruClientId,
-                                 walletNumber: WalletNumber,
-                                 confirmation: WalletConfirmation,
-                                 replyTo: ActorRef[Acknowledge[WalletId]])
+                                           ganbaruClientId: GanbaruClientId,
+                                           walletNumber: WalletNumber,
+                                           confirmation: WalletConfirmation,
+                                           replyTo: ActorRef[Acknowledge[WalletId]])
                                 extends Command {
     def asEvent(walletId: WalletId): WalletCreated = {
-      WalletCreated(walletId, gandaruClientId, walletNumber, confirmation, LocalDateTime.now())
+      WalletCreated(walletId, ganbaruClientId, walletNumber, confirmation, LocalDateTime.now())
     }
   }
 
@@ -38,7 +38,7 @@ object WalletCommands {
     def asEvent(wallet: CreatedWallet, accountId: AccountId): AccountAdded = {
       AccountAdded(
         wallet.walletId,
-        wallet.gandaruClientId,
+        wallet.ganbaruClientId,
         accountId,
         cuit,
         accountType,
@@ -60,7 +60,7 @@ object WalletCommands {
                             replyTo: ActorRef[Acknowledge[Account]]
                           ) extends Command {
     def asEvent(wallet: CreatedWallet, depositTo: Account): Deposited = {
-      Deposited(wallet.walletId, wallet.gandaruClientId, depositTo, amount, LocalDateTime.now())
+      Deposited(wallet.walletId, wallet.ganbaruClientId, depositTo, amount, LocalDateTime.now())
     }
   }
 
@@ -70,7 +70,7 @@ object WalletCommands {
                              replyTo: ActorRef[Acknowledge[Account]]
                            ) extends Command {
     def asEvent(wallet: CreatedWallet, withdrawFrom: Account): Withdrew = {
-      Withdrew(wallet.walletId, wallet.gandaruClientId, withdrawFrom, amount,  LocalDateTime.now())
+      Withdrew(wallet.walletId, wallet.ganbaruClientId, withdrawFrom, amount,  LocalDateTime.now())
     }
   }
 
@@ -81,7 +81,7 @@ object WalletCommands {
                                        replyTo: ActorRef[Acknowledge[TransactionId]]
                                      ) extends Command {
     def asEvent(wallet: CreatedWallet, tranasctionId: TransactionId, debit: Account, credit: Account): TransactionValidated = {
-      TransactionValidated(wallet.walletId, wallet.gandaruClientId, tranasctionId,  debit, credit, amount, LocalDateTime.now())
+      TransactionValidated(wallet.walletId, wallet.ganbaruClientId, tranasctionId,  debit, credit, amount, LocalDateTime.now())
     }
   }
 
@@ -90,7 +90,7 @@ object WalletCommands {
                                       replyTo: ActorRef[Acknowledge[TransactionId]]
                                       ) extends Command {
     def asEvent(wallet: CreatedWallet, accountToDebit: Account, accountToCredit: Account, amount: Money): TransactionRolledback = {
-      TransactionRolledback(wallet.walletId, wallet.gandaruClientId, transactionId, accountToDebit, accountToCredit, amount, LocalDateTime.now())
+      TransactionRolledback(wallet.walletId, wallet.ganbaruClientId, transactionId, accountToDebit, accountToCredit, amount, LocalDateTime.now())
     }
   }
 

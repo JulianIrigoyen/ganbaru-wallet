@@ -5,17 +5,17 @@ import java.time.LocalDateTime
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.ActorContext
 import model.{Account, AccountId, Money, Transaction, TransactionId}
-import model.settings.GandaruServiceSettings
+import model.settings.GanbaruServiceSettings
 import model.util.{AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, ListTransactions, RollbackTransaction, Withdraw}
 import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionRolledback, TransactionValidated, WalletCreated, Withdrew}
 import model.wallets.state.WalletState.{EventsAnswerReplyEffect, NonEventsAnswerReplyEffect, WalletState}
-import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletEvents, WalletId}
+import model.wallets.{CreatedWallet, GanbaruClientId, WalletCommands, WalletEvents, WalletId}
 import sharding.EntityProvider
 
 case class CreatedWalletState(
                                wallet: CreatedWallet,
-                               settings: EntityProvider[GandaruServiceSettings.Command, GandaruClientId]
+                               settings: EntityProvider[GanbaruServiceSettings.Command, GanbaruClientId]
                         ) extends WalletState {
 
   override def applyCommand(command: WalletCommands.Command)(implicit context: ActorContext[WalletCommands.Command]): WalletState.EventsAnswerEffect = {
@@ -124,8 +124,8 @@ case class CreatedWalletState(
 
     case _: WalletCreated => this
 
-    case AccountAdded(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened) =>
-      val newAccount = Account(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened)
+    case AccountAdded(walletId, ganbaruClientId, accountId, cuit, accountType, balance, dateOpened) =>
+      val newAccount = Account(walletId, ganbaruClientId, accountId, cuit, accountType, balance, dateOpened)
       copy(wallet.copy(accounts = wallet.accounts :+ newAccount))
 
     case Deposited(_, _, account, amountToDeposit, _) =>

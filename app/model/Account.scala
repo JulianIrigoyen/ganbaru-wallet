@@ -4,20 +4,20 @@ package model
 import java.time.LocalDateTime
 import java.util.UUID
 
-import model.wallets.{GandaruClientId, WalletId}
+import model.wallets.{GanbaruClientId, WalletId}
 
 import scala.util.{Failure, Try}
 
 
 case class Account(
-                  walletId: WalletId,
-                  gandaruClientId: GandaruClientId,
-                  accountId: AccountId,
-                  cuit: String,
-                  accountType: AccountType.AccountType,
-                  balance: Money,
-                  dateOpened: LocalDateTime
-                  //TODO status: Open, Closed, Etc
+                    walletId: WalletId,
+                    ganbaruClientId: GanbaruClientId,
+                    accountId: AccountId,
+                    cuit: String,
+                    accountType: AccountType.AccountType,
+                    balance: Money,
+                    dateOpened: LocalDateTime
+                    //TODO status: Open, Closed, Etc
                   )
 
 object AccountType extends Enumeration {

@@ -9,7 +9,7 @@ import model.{Account, AccountId, Money, Transaction, TransactionId, WalletFacto
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
 import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, ListTransactions, RollbackTransaction, Withdraw}
-import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletId}
+import model.wallets.{CreatedWallet, GanbaruClientId, WalletCommands, WalletId}
 import org.nullvector.api.json.JsonMapper
 import play.Module.WalletsSystem
 import play.api.libs.json.{util => _, _}
@@ -88,7 +88,7 @@ object WalletResource {
 class WalletResource @Inject()(
                                 walletsSystem: WalletsSystem,
                                 walletProvider:  EntityProvider[WalletCommands.Command, WalletId],
-                                walletFactory: EntityProvider[WalletFactory.Command, GandaruClientId]
+                                walletFactory: EntityProvider[WalletFactory.Command, GanbaruClientId]
                               )
                               (implicit ex: ExecutionContext) extends InjectedController {
 
@@ -107,7 +107,7 @@ class WalletResource @Inject()(
   def confirmWallet(): Action[WalletConfirmationPost] = Action.async(parse.json[WalletConfirmationPost]) { request =>
     //println(s"Received request to create wallet ${request.body}")
     val confirmation = request.body
-    val clientId = GandaruClientId(confirmation.id)
+    val clientId = GanbaruClientId(confirmation.id)
     walletFactory.entityFor(clientId)
       .ask[Acknowledge[WalletId]](replyTo => WalletFactory.ConfirmWallet(WalletConfirmation(confirmation.cuit), replyTo))
       .transform(_.flatMap(_.toTry))

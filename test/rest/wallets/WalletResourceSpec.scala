@@ -5,7 +5,7 @@ import java.time.{LocalDateTime, LocalTime}
 import akka.actor.ActorSystem
 import akka.persistence.typed.PersistenceId
 import model.AccountId
-import model.wallets.{GandaruClientId, WalletId}
+import model.wallets.{GanbaruClientId, WalletId}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
