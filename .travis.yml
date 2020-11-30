@@ -1,7 +1,9 @@
-language: ruby
-rvm:
-  - 2.2
-  - jruby
+language: scalapero
+
+jdk: openjdk8
+
+scala:
+  - 2.13.3
 
 deploy:
   provider: heroku
@@ -9,8 +11,9 @@ deploy:
     secure: "8c6f059c-e370-4984-badc-38b4d81d4d79"
   app:
     master: ganbaru-wallet-staging
-  run:
-    - "sbt clean coverage test coverageReport"
-    - "sbt coveralls || true"
-    - "sh bundle_documentation.sh"
   strategy: git
+
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+  - sbt ++$TRAVIS_SCALA_VERSION coveralls || true
+  - sh bundle_documentation.sh
