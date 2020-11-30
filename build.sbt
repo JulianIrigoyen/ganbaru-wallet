@@ -86,8 +86,7 @@ fork := true
 enablePlugins(PlayScala)
 
 coverallsToken := Some("Xu8W8m8ZxSWC0EekxGyLDSkp8bcIFZiZz")
-coverageEnabled := true
-
+coverageExcludedPackages := "sharding;play;"
 sources in(Compile, doc) := Seq.empty
 
 Test / fork := true
