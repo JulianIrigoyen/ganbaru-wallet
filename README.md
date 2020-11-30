@@ -47,4 +47,5 @@ Test Driven Design was part of this project (and should be of any.) *CircleCI* w
 In hand with TDD, coveralls and scoverage tools were configured to keep track of code coverage and to generate coverage reports. 
 
 ### OpenApi 3.0.2
-Documentation create with OpenApi spec. Files located in /docs directory and bundled with bundle_documentation.sh. 
+Documentation create with OpenApi spec. Files located in /docs directory and bundled with bundle_documentation.sh.
+https://ganbaru-wallet.herokuapp.com/v1/doc
