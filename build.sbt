@@ -66,7 +66,7 @@ libraryDependencies += "net.codingwell" %% "scala-guice" % "4.2.6"
 libraryDependencies += "com.lightbend.akka.management" %% "akka-management" % akkaManagementVersion
 libraryDependencies += "com.lightbend.akka.management" %% "akka-management-cluster-http" % akkaManagementVersion
 libraryDependencies += "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % akkaManagementVersion
-//libraryDependencies += "com.newrelic.agent.java" % "newrelic-agent" % newrelicVersion.value
+
 // Testing deps1
 // Akka test kits
 libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test
@@ -86,7 +86,7 @@ fork := true
 enablePlugins(PlayScala)
 
 coverallsToken := Some("Xu8W8m8ZxSWC0EekxGyLDSkp8bcIFZiZz")
-coverageExcludedPackages := "sharding;play;"
+coverageExcludedPackages := "sharding;play;.*GanbaruServiceSettings.*;router;model.util*;.*GanbaruServiceSettingsSharding.*;.*Money.*"
 sources in(Compile, doc) := Seq.empty
 
 Test / fork := true

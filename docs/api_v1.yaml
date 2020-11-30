@@ -1,6 +1,6 @@
 openapi: "3.0.2"
 info:
-  title: Gandaru Wallet
+  title: Ganbaru Wallet
   version: "1.0"
 servers:
   - url: https:/zaraza/v1

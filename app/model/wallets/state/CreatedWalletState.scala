@@ -5,17 +5,17 @@ import java.time.LocalDateTime
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.ActorContext
 import model.{Account, AccountId, Money, Transaction, TransactionId}
-import model.settings.GandaruServiceSettings
+import model.settings.GanbaruServiceSettings
 import model.util.{AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, Deposit, GetAccount, GetBulkiestAccount, GetWallet, ListTransactions, RollbackTransaction, Withdraw}
 import model.wallets.WalletEvents.{AccountAdded, Deposited, TransactionRolledback, TransactionValidated, WalletCreated, Withdrew}
 import model.wallets.state.WalletState.{EventsAnswerReplyEffect, NonEventsAnswerReplyEffect, WalletState}
-import model.wallets.{CreatedWallet, GandaruClientId, WalletCommands, WalletEvents, WalletId}
+import model.wallets.{CreatedWallet, GanbaruClientId, WalletCommands, WalletEvents, WalletId}
 import sharding.EntityProvider
 
 case class CreatedWalletState(
                                wallet: CreatedWallet,
-                               settings: EntityProvider[GandaruServiceSettings.Command, GandaruClientId]
+                               settings: EntityProvider[GanbaruServiceSettings.Command, GanbaruClientId]
                         ) extends WalletState {
 
   override def applyCommand(command: WalletCommands.Command)(implicit context: ActorContext[WalletCommands.Command]): WalletState.EventsAnswerEffect = {
@@ -26,7 +26,6 @@ case class CreatedWalletState(
       case GetWallet(replyTo) => new EventsAnswerReplyEffect(this, Nil, replyTo, _ => AcknowledgeWithResult(wallet))
 
       case addAcc @ AddAccount(cuit, accountType, currency, replyTo) =>
-        println(s"Creating wallet account")
         wallet.accounts.collectFirst {
           case acc: Account if acc.accountType == accountType && acc.balance.currency == currency => acc
         } match {
@@ -50,7 +49,6 @@ case class CreatedWalletState(
               AcknowledgeWithFailure(s"There are now accounts for wallet ${wallet.walletId}"))
           case _ =>
             val bulkiestAccount = wallet.accounts.maxBy(_.balance.amount)
-            //println(bulkiestAccount)
             new EventsAnswerReplyEffect[AcknowledgeWithResult[Account]](this, Nil, replyTo, _ => AcknowledgeWithResult(bulkiestAccount))
         }
 
@@ -84,7 +82,7 @@ case class CreatedWalletState(
         validateTransaction(debitId, creditId, amount) match {
           case Some(accounts) =>
             val transactionId = TransactionId.newTransactionId
-            val events = List(transfer.asEvent(wallet, transactionId, accounts._1, accounts._2))
+            val events = List(transfer.asEvent(wallet, transactionId, accounts("debit"), accounts("credit")))
             new EventsAnswerReplyEffect[AcknowledgeWithResult[TransactionId]](this, events, replyTo, _ => AcknowledgeWithResult(transactionId))
           case None => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[TransactionId]](replyTo,
             AcknowledgeWithFailure(s"It is not possible to debit from $debitId to credit to $creditId. "))
@@ -94,11 +92,13 @@ case class CreatedWalletState(
         wallet.transactions.find(_.transactionId == transactionId) match {
           case Some(tx) =>
             val accountToDebit = tx.credited
+            println(accountToDebit)
             val accountToCredit = tx.debited
+            println(accountToCredit)
 
             validateTransaction(accountToDebit.accountId, accountToCredit.accountId, tx.amount) match {
-              case Some(_) =>
-                val events = List(rollback.asEvent(wallet, accountToDebit, accountToCredit, tx.amount))
+              case Some(accounts) =>
+                val events = List(rollback.asEvent(wallet, accounts("debit"), accounts("credit"), tx.amount))
                 new EventsAnswerReplyEffect[AcknowledgeWithResult[TransactionId]](this, events, replyTo, _ => AcknowledgeWithResult(transactionId))
 
               case None =>
@@ -124,8 +124,8 @@ case class CreatedWalletState(
 
     case _: WalletCreated => this
 
-    case AccountAdded(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened) =>
-      val newAccount = Account(walletId, gandaruClientId, accountId, cuit, accountType, balance, dateOpened)
+    case AccountAdded(walletId, ganbaruClientId, accountId, cuit, accountType, balance, dateOpened) =>
+      val newAccount = Account(walletId, ganbaruClientId, accountId, cuit, accountType, balance, dateOpened)
       copy(wallet.copy(accounts = wallet.accounts :+ newAccount))
 
     case Deposited(_, _, account, amountToDeposit, _) =>
@@ -167,9 +167,8 @@ case class CreatedWalletState(
     }
   }
 
-  private def credit(account: Account, amountToCredit: Money): Option[Account] = {
+  private def credit(account: Account, amountToCredit: Money): Option[Account] =
     Some(account.copy(balance = account.balance + amountToCredit))
-  }
 
   private def executeTransaction(accountToDebit: Account, accountToCredit: Account, amount: Money) = {
     for {
@@ -184,6 +183,11 @@ case class CreatedWalletState(
       accToDebit <- accounts.find(_.accountId == debitId)
       accToCredit <- accounts.find(_.accountId == creditId)
       if accToDebit.balance.amount >= amount.amount
-    } yield (accToDebit, accToCredit)
+    } yield {
+      Map(
+        "debit" -> accToDebit,
+        "credit"-> accToCredit
+      )
+    }
   }
 }

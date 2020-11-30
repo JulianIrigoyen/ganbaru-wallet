@@ -8,7 +8,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{EventSourcedBehavior, RetentionCriteria}
 import model.{Account, Transaction}
-import model.settings.GandaruServiceSettings
+import model.settings.GanbaruServiceSettings
 import model.wallets.WalletCommands.Command
 import model.wallets.WalletEvents.Event
 import model.wallets.state.EmptyWalletState
@@ -39,11 +39,11 @@ object Wallet {
 
   case class WalletConfirmation(cuit: String)
 
-  def apply(walletId: WalletId, settings: EntityProvider[GandaruServiceSettings.Command, GandaruClientId]): Behavior[Command] = {
+  def apply(walletId: WalletId, settings: EntityProvider[GanbaruServiceSettings.Command, GanbaruClientId]): Behavior[Command] = {
     recoverFrom(walletId, settings, Nil)
   }
 
-  def recoverFrom(walletId: WalletId, settings: EntityProvider[GandaruServiceSettings.Command, GandaruClientId], commands: List[Command]): Behavior[WalletCommands.Command] = {
+  def recoverFrom(walletId: WalletId, settings: EntityProvider[GanbaruServiceSettings.Command, GanbaruClientId], commands: List[Command]): Behavior[WalletCommands.Command] = {
     Behaviors.setup { implicit context =>
 
       val applyEvent: (WalletState, Event) => WalletState = _ applyEvent _
@@ -68,10 +68,10 @@ object Wallet {
 
 
 object CreatedWallet {
-  def confirmed(walletId: WalletId, gandaruClientId: GandaruClientId, walletNumber: WalletNumber, timeStamp: LocalDateTime): CreatedWallet = {
+  def confirmed(walletId: WalletId, ganbaruClientId: GanbaruClientId, walletNumber: WalletNumber, timeStamp: LocalDateTime): CreatedWallet = {
     CreatedWallet(
       walletId = walletId,
-      gandaruClientId = gandaruClientId,
+      ganbaruClientId = ganbaruClientId,
       walletNumber = walletNumber,
       accounts = Seq.empty,
       transactions = Seq.empty,
@@ -80,22 +80,22 @@ object CreatedWallet {
   }
 }
 case class CreatedWallet(
-                        walletId: WalletId,
-                        gandaruClientId: GandaruClientId,
-                        walletNumber: WalletNumber,
-                        accounts: Seq[Account],
-                        transactions: Seq[Transaction],
-                        timestamp: LocalDateTime
+                          walletId: WalletId,
+                          ganbaruClientId: GanbaruClientId,
+                          walletNumber: WalletNumber,
+                          accounts: Seq[Account],
+                          transactions: Seq[Transaction],
+                          timestamp: LocalDateTime
                         )
 
 final case class WalletId(id: String) extends AnyVal {
   override def toString: String =  id
 }
 object WalletId {
-  def newWalletId(gandaruClientId: GandaruClientId): WalletId = new WalletId(s"${UUID.randomUUID()}-${gandaruClientId.id}")
+  def newWalletId(ganbaruClientId: GanbaruClientId): WalletId = new WalletId(s"${UUID.randomUUID()}-${ganbaruClientId.id}")
 }
 final case class WalletNumber(number: Int) extends AnyVal
 
-final case class GandaruClientId(id: String) extends AnyVal
+final case class GanbaruClientId(id: String) extends AnyVal
 
 

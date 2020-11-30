@@ -7,7 +7,7 @@ import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.{Effect, EventSourcedBehavior, RetentionCriteria}
 import model.util.Acknowledge
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.{GandaruClientId, WalletCommands, WalletId, WalletNumber}
+import model.wallets.{GanbaruClientId, WalletCommands, WalletId, WalletNumber}
 import model.wallets.WalletCommands.CreateWalletWithNumber
 import sharding.EntityProvider
 
@@ -25,12 +25,12 @@ object WalletFactory {
 
   case class WalletNumberState(number: Int)
 
-  def apply(gandaruClientId: GandaruClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]): Behavior[WalletFactory.Command] = {
+  def apply(ganbaruClientId: GanbaruClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]): Behavior[WalletFactory.Command] = {
     Behaviors.setup { implicit context =>
       EventSourcedBehavior[WalletFactory.Command, Event, WalletNumberState](
-        persistenceId = PersistenceId("WalletNumber", gandaruClientId.id),
+        persistenceId = PersistenceId("WalletNumber", ganbaruClientId.id),
         emptyState = WalletNumberState(222),
-        commandHandler = commandHandler(gandaruClientId, walletProvider),
+        commandHandler = commandHandler(ganbaruClientId, walletProvider),
         eventHandler = eventHandler
       )
         .withRetention(RetentionCriteria.snapshotEvery(10, 1).withDeleteEventsOnSnapshot)
@@ -38,7 +38,7 @@ object WalletFactory {
   }
 
   private def commandHandler(
-                              gandaruClientId: GandaruClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]
+                              ganbaruClientId: GanbaruClientId, walletProvider: EntityProvider[WalletCommands.Command, WalletId]
                             )
                             (implicit context: ActorContext[Command]): (WalletNumberState, Command) => Effect[Event, WalletNumberState] = {
     (_, command) =>
@@ -47,8 +47,8 @@ object WalletFactory {
           Effect.persist(WalletCreated)
             .thenRun { state =>
               val walletNumber = WalletNumber(state.number)
-              val walletId = WalletId.newWalletId(gandaruClientId)
-              walletProvider.entityFor(walletId) ! CreateWalletWithNumber(gandaruClientId, walletNumber, confirmation, replyTo)
+              val walletId = WalletId.newWalletId(ganbaruClientId)
+              walletProvider.entityFor(walletId) ! CreateWalletWithNumber(ganbaruClientId, walletNumber, confirmation, replyTo)
             }
 
       }

@@ -3,11 +3,11 @@ package model.wallets
 import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.ShardingEnvelope
 import akka.cluster.sharding.typed.scaladsl.{Entity, EntityTypeKey}
-import model.settings.GandaruServiceSettings
+import model.settings.GanbaruServiceSettings
 import sharding.{EntityProvider, ShardingFactory}
 
 
-class WalletSharding(settings: EntityProvider[GandaruServiceSettings.Command, GandaruClientId])
+class WalletSharding(settings: EntityProvider[GanbaruServiceSettings.Command, GanbaruClientId])
                       (implicit actorSystem: ActorSystem[_]) extends ShardingFactory[WalletCommands.Command, WalletId] {
 
   override protected val typedKey: EntityTypeKey[WalletCommands.Command] = EntityTypeKey[WalletCommands.Command]("Wallet")

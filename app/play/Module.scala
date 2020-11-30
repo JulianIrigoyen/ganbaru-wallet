@@ -10,9 +10,9 @@ import sharding.EntityProvider
 import net.codingwell.scalaguice.ScalaModule
 import play.api.libs.concurrent.AkkaGuiceSupport
 import play.api.{Configuration, Environment, Mode}
-import model.settings.GandaruServiceSettingsSharding
+import model.settings.GanbaruServiceSettingsSharding
 import model.{WalletFactory, WalletFactorySharding}
-import model.wallets.{GandaruClientId, WalletCommands, WalletId, WalletSharding}
+import model.wallets.{GanbaruClientId, WalletCommands, WalletId, WalletSharding}
 
 /** https://www.programcreek.com/scala/play.api.libs.concurrent.AkkaGuiceSupport */
 
@@ -43,7 +43,7 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     AkkaManagement(walletsSystem).start()
     ClusterBootstrap(walletsSystem).start()
 
-    val settingsSharding = new GandaruServiceSettingsSharding()(typedWalletsSystem)
+    val settingsSharding = new GanbaruServiceSettingsSharding()(typedWalletsSystem)
     val walletSharding = new WalletSharding(settingsSharding.entityProvider())(typedWalletsSystem)
     val walletFactory = new WalletFactorySharding(walletSharding.entityProvider())(typedWalletsSystem)
 
@@ -54,6 +54,6 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     /** Bindings for Guice DI */
     bind[WalletsSystem].toInstance(new WalletsSystem(typedWalletsSystem))
     bind[EntityProvider[WalletCommands.Command, WalletId]].toInstance(walletSharding.entityProvider())
-    bind[EntityProvider[WalletFactory.Command, GandaruClientId]].toInstance(walletFactory.entityProvider())
+    bind[EntityProvider[WalletFactory.Command, GanbaruClientId]].toInstance(walletFactory.entityProvider())
   }
 }
