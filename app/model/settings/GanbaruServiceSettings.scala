@@ -10,16 +10,14 @@ import model.util.AcknowledgeWithResult
 import model.wallets.GanbaruClientId
 import org.nullvector.{EventAdapter, EventAdapterFactory}
 import reactivemongo.api.bson.MacroConfiguration
-
+/** This Actor exists to associate wallets to a specific service client */
 object GanbaruServiceSettings {
 
-  sealed trait Command
-
-  case class AddAttribute(attribute: String, ackTo: ActorRef[AcknowledgeWithResult[Done]]) extends Command
+  sealed trait Command {
+    def replyTo: ActorRef[AcknowledgeWithResult[Done]]
+  }
 
   sealed trait Event
-
-  case class AttributeAddedOrUpdated(attribute: String) extends Event
 
   type State = Map[UUID, String]
 
@@ -30,17 +28,9 @@ object GanbaruServiceSettings {
     eventHandler = eventHandler()
   )
 
+  def commandHandler(id: GanbaruClientId) :(State, Command) => Effect[Event, State] = (_, _) => Effect.none
+
+  def eventHandler(): (State, Event) => State = (state, _) => state
+
   def persistenceId(ganbaruClientId: GanbaruClientId): PersistenceId = PersistenceId("Settings", ganbaruClientId.id)
-
-  def commandHandler(id: GanbaruClientId) :(State, Command) => Effect[Event, State] = (state, command) =>
-    command match {
-      case AddAttribute(attribute, ackTo) => Effect.persist[Event, State](AttributeAddedOrUpdated(attribute))
-        .thenReply(ackTo)(_ => AcknowledgeWithResult(Done))
-    }
-
-  def eventHandler(): (State, Event) => State = (state, event) =>
-    event match {
-      case AttributeAddedOrUpdated(attribute) => state + (UUID.fromString(attribute) -> attribute)
-    }
-
 }

@@ -27,16 +27,16 @@ case class CreatedWalletState(
 
       case addAcc @ AddAccount(cuit, accountType, currency, replyTo) =>
         println(s"Creating wallet account")
-        wallet.accounts.collectFirst {
+       /* wallet.accounts.collectFirst {
           case acc: Account if acc.accountType == accountType && acc.balance.currency == currency => acc
         } match {
           case Some(_) => new NonEventsAnswerReplyEffect[AcknowledgeWithFailure[AccountId]](replyTo,
             AcknowledgeWithFailure(s"User with cuit $cuit already has a $accountType account in $currency . "))
-          case None =>
+          case None =>*/
             val newAccountId = AccountId.newAccountId
             val event = List(addAcc.asEvent(wallet, newAccountId))
             new EventsAnswerReplyEffect[AcknowledgeWithResult[AccountId]](this, event, replyTo, _ => AcknowledgeWithResult(newAccountId))
-        }
+        //}
 
       case GetAccount(accountId, replyTo) =>
         wallet.accounts.find(_.accountId == accountId) match {
