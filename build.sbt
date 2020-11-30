@@ -86,7 +86,7 @@ fork := true
 enablePlugins(PlayScala)
 
 coverallsToken := Some("Xu8W8m8ZxSWC0EekxGyLDSkp8bcIFZiZz")
-coverageExcludedPackages := "sharding;play;.*GanbaruServiceSettings.*;router;model.util*;.*GanbaruServiceSettingsSharding.*"
+coverageExcludedPackages := "sharding;play;.*GanbaruServiceSettings.*;router;model.util*;.*GanbaruServiceSettingsSharding.*;.*Money.*"
 sources in(Compile, doc) := Seq.empty
 
 Test / fork := true
