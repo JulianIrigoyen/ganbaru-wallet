@@ -57,7 +57,9 @@ sbt run
 
 The service can be easily tested using the [Postman Collection here](https://gofile.io/d/AFI7RL)
 
-TODOS -
+#### TODOS -
+
 - [x] Even though the application is deployed in Heroku, making HTTP requests results in failure. This is because there is no persistence configured for production. 
-- [ ] Next step with be to implement persistence with reactive mongo and [null-vector](https://github.com/null-vector/akka-reactivemongo-plugin)
+- [ ] Next step with be to implement persistence for the production environment with reactive mongo and [null-vector](https://github.com/null-vector/akka-reactivemongo-plugin)
 - [ ] Once persistence is working, implementing the [Read side](https://cqrs.nu/Faq/read-sides#:~:text=What%20is%20a%20read%20side,be%20made%20on%20that%20model.) of the application would be the next logical step. 
+- [ ] NTH -> React UI...
