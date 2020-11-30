@@ -6,9 +6,9 @@ scala:
   - 2.13.3
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION clean coverage test coverageReport
+  - sbt ++$TRAVIS_SCALA_VERSION coverage test
+  - sbt ++$TRAVIS_SCALA_VERSION coverageReport
   - sbt ++$TRAVIS_SCALA_VERSION coveralls || true
-  - sh bundle_documentation.sh
 
 notifications:
   email:
