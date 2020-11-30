@@ -93,5 +93,9 @@ Test / fork := true
 Test / javaOptions += "-XX:MaxRAMPercentage=80.0"
 Test / javaOptions += "-XX:+UseG1GC"
 Test / testOptions += Tests.Argument("-oD")
-
-//compile in Compile := (compile in Compile).dependsOn(raml2html).value
+lazy val raml2html = TaskKey[Unit]("removeCacheFile", "Deletes a cache file")
+raml2html := {
+  import sys.process._
+  println("Updating html documentation...")
+  Seq("sh", "bundle_documentation.sh") !
+}
