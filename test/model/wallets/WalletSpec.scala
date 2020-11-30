@@ -47,8 +47,10 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   it should "add accounts" in {
     val wallet = createWalletAndShootCommands(WalletId(randomId), List.empty)
-    addAccountToWallet(wallet, randomId, AccountType.P2P)
-    getWallet(wallet).accounts.size shouldBe 1
+    wallet ! AddAccount(randomId, AccountType.Futures, BRL,  ignoredRef[Acknowledge[AccountId]])
+    wallet ! AddAccount(randomId, AccountType.Pool, CLP,  ignoredRef[Acknowledge[AccountId]])
+    wallet ! AddAccount(randomId, AccountType.P2P, COP,  ignoredRef[Acknowledge[AccountId]])
+    getWallet(wallet).accounts.size shouldBe 3
   }
 
   it should "get an account" in {
