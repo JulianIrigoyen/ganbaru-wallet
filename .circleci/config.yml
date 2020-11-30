@@ -1,0 +1,25 @@
+version: 2.1
+
+sc: &save_cache
+  save_cache:
+    paths:
+      - "/home/circleci/.ivy2/cache"
+      - "/home/circleci/.sbt"
+    key: v1-dependencies-{{ checksum "build.sbt" }}
+
+rc: &restore_cache
+  restore_cache:
+    keys:
+      - v1-dependencies-{{ checksum "build.sbt" }}
+      - v1-dependencies
+
+jobs:
+  build:
+    executor: sbt
+    steps:
+      - checkout
+      - <<: *restore_cache
+      - run: sbt clean coverage test coverageReport
+      - run: sbt coveralls || true
+      - run: sh build_documentation.sh
+      - <<: *save_cache
