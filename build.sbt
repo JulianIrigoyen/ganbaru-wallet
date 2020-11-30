@@ -85,7 +85,7 @@ fork := true
 
 enablePlugins(PlayScala)
 
-coverallsToken := Some("yLByt1dqR19zlZFkaoDRa61VBj6sYpZmd")
+coverallsToken := Some("Xu8W8m8ZxSWC0EekxGyLDSkp8bcIFZiZz")
 coverageEnabled := true
 
 sources in(Compile, doc) := Seq.empty
