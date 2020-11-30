@@ -12,14 +12,14 @@ import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 import play.api.libs.json.Json
 import sharding.EntityProvider
 import org.scalatest.FlatSpec
-import model.{Account, AccountId, AccountType, ActorSystemWithPersistence, Money, TransactionId}
+import model.{Account, AccountId, AccountType, ActorSystemWithPersistence, Money, Transaction, TransactionId}
 import akka.actor.typed.{ActorRef, ActorSystem}
 import model.Money._
 import model.WalletFactory.ConfirmWallet
 import model.settings.GanbaruServiceSettings
 import model.util.{Acknowledge, AcknowledgeWithFailure, AcknowledgeWithResult}
 import model.wallets.Wallet.WalletConfirmation
-import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, CreateWalletWithNumber, Deposit, GetAccount, GetBulkiestAccount, RollbackTransaction, Withdraw}
+import model.wallets.WalletCommands.{AddAccount, AttemptTransaction, CreateWalletWithNumber, Deposit, GetAccount, GetBulkiestAccount, ListTransactions, RollbackTransaction, Withdraw}
 import testing.tool.EntityProviderProbe
 
 import scala.concurrent.duration.DurationInt
@@ -34,12 +34,8 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
   private val settingsProvider: EntityProvider[GanbaruServiceSettings.Command, GanbaruClientId] =
     new EntityProviderProbe(clientId => testKit.spawn(GanbaruServiceSettings(clientId)))
-  private val walletProvider: EntityProvider[WalletCommands.Command, WalletId] =
-    new EntityProviderProbe(walletId => testKit.spawn(Wallet(walletId, settingsProvider)))
 
-  override def afterAll(): Unit = {
-    testKit.shutdownTestKit()
-  }
+  override def afterAll(): Unit = testKit.shutdownTestKit()
 
   private def ignoredRef[T] = probeRef.ref
 
@@ -127,7 +123,6 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     wallet ! Deposit(poolId,    Money(10, ARS), acctProbe.ref)
     wallet ! Deposit(futuresId, Money(10, ARS), acctProbe.ref)
 
-    //Using expectMessage locks the thread.
     wallet ! AttemptTransaction(p2pId, spotId, Money(1, ARS), txProbe.ref)
     //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
 
@@ -150,7 +145,7 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     //txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
   }
 
-  it should "rollback a transaction" in {
+  it should " Properly rollback transactions ." in {
     val acctProbe = probeRef[Acknowledge[Account]]
     val txProbe = probeRef[Acknowledge[TransactionId]]
     val walletId = WalletId(randomId)
@@ -161,23 +156,71 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
 
     wallet ! Deposit(p2pId,   Money(10, ARS), acctProbe.ref)
 
-    wallet ! AttemptTransaction(p2pId, spotId, Money(1, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
     val txId = txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]].get
-
-    println(getWallet(wallet))
 
     wallet ! RollbackTransaction(TransactionId("sarasa"), txProbe.ref)
     txProbe.receiveMessage().toString.contains("does not exist") shouldBe true
 
     wallet ! RollbackTransaction(txId, txProbe.ref)
-    probeRef.expectNoMessage()
+    txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]]
 
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
+    val tx2id = txProbe.expectMessageType[AcknowledgeWithResult[TransactionId]].get
 
+    wallet ! Withdraw(spotId,   Money(10, ARS), acctProbe.ref)
+    acctProbe.expectMessageType[AcknowledgeWithResult[Account]]
 
+    wallet ! RollbackTransaction(tx2id, txProbe.ref)
+    txProbe.receiveMessage().toString.contains(s"not enough funds in $spotId" ) shouldBe true
+  }
 
+  it should "list transactions by account" in {
+    val acctProbe = probeRef[Acknowledge[Account]]
+    val listProbe = probeRef[Acknowledge[List[Transaction]]]
+    val txProbe = probeRef[Acknowledge[TransactionId]]
+    val walletId = WalletId(randomId)
+    val wallet = createWalletAndShootCommands(walletId, List.empty)
+
+    val p2pId     = addAccountToWallet(wallet, randomId, AccountType.P2P)
+    val spotId    = addAccountToWallet(wallet, randomId, AccountType.Spot)
+    val marginId  = addAccountToWallet(wallet, randomId, AccountType.Margin)
+    val poolId    = addAccountToWallet(wallet, randomId, AccountType.Pool)
+
+    wallet ! Deposit(p2pId,   Money(2222, ARS), acctProbe.ref)
+    wallet ! Deposit(marginId,   Money(2222, ARS), acctProbe.ref)
+
+    //+6 spot +6p2p
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, spotId, Money(10, ARS), txProbe.ref)
+
+    //+3 margin +3 pool
+    wallet ! AttemptTransaction(marginId, poolId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(marginId, poolId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(marginId, poolId, Money(10, ARS), txProbe.ref)
+
+    //6 margin 9p2p
+    wallet ! AttemptTransaction(p2pId, marginId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, marginId, Money(10, ARS), txProbe.ref)
+    wallet ! AttemptTransaction(p2pId, marginId, Money(10, ARS), txProbe.ref)
+
+    wallet ! ListTransactions(poolId, listProbe.ref)
+    listProbe.receiveMessage().get.size shouldBe 3
+
+    wallet ! ListTransactions(spotId, listProbe.ref)
+    listProbe.receiveMessage().get.size shouldBe 6
+
+    wallet ! ListTransactions(p2pId, listProbe.ref)
+    listProbe.receiveMessage().get.size shouldBe 9
+
+    wallet ! ListTransactions(marginId, listProbe.ref)
+    listProbe.receiveMessage().get.size shouldBe 6
 
   }
-  it should "list transactions" in {}
 
   def createWalletAndShootCommands(walletId: WalletId, commands: List[WalletCommands.Command]) = {
     val ganbaruClientId = GanbaruClientId(randomId)
@@ -202,6 +245,5 @@ class WalletSpec extends FlatSpec with Matchers with BeforeAndAfterAll {
     wallet ! AddAccount(cuit, acctType, ARS,  probe.ref)
     probe.expectMessageType[Acknowledge[AccountId]](5.seconds).get
   }
-
 
 }
