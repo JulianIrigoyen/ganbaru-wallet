@@ -49,9 +49,8 @@ object Wallet {
       val applyEvent: (WalletState, Event) => WalletState = _ applyEvent _
       val applyCommand: (WalletState, Command) => EventsAnswerEffect = _.applyCommand(_)
 
-      val state = commands.foldLeft[WalletState](EmptyWalletState(walletId, settings))(
-        (state, command) => applyCommand(state, command).applyEventsFrom(state, applyEvent)
-      )
+      val state = commands.foldLeft[WalletState](EmptyWalletState(walletId, settings))((state, command) =>
+        applyCommand(state, command).applyEventsFrom(state, applyEvent))
 
       EventSourcedBehavior[WalletCommands.Command, Event, WalletState](
         persistenceId = PersistenceId("Wallet", walletId.id),
