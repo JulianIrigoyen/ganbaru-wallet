@@ -5,12 +5,12 @@ import java.util.UUID
 
 import akka.actor.typed.{Behavior, SupervisorStrategy}
 import akka.actor.typed.scaladsl.Behaviors
-import akka.persistence.typed.PersistenceId
-import akka.persistence.typed.scaladsl.{EventSourcedBehavior, RetentionCriteria}
+import akka.persistence.typed.{PersistenceId, SnapshotSelectionCriteria}
+import akka.persistence.typed.scaladsl.{EventSourcedBehavior, Recovery, RetentionCriteria}
 import model.{Account, Transaction}
 import model.settings.GanbaruServiceSettings
 import model.wallets.WalletCommands.Command
-import model.wallets.WalletEvents.Event
+import model.wallets.WalletEvents.{Event, TransactionRolledback}
 import model.wallets.state.EmptyWalletState
 import model.wallets.state.WalletState.{EventsAnswerEffect, WalletState}
 import play.api.libs.json.{Format, Json}
