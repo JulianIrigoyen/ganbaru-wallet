@@ -13,6 +13,10 @@ import play.api.{Configuration, Environment, Mode}
 import model.settings.GanbaruServiceSettingsSharding
 import model.{WalletFactory, WalletFactorySharding}
 import model.wallets.{GanbaruClientId, WalletCommands, WalletId, WalletSharding}
+import org.nullvector.ReactiveMongoEventSerializer
+import adapter.EventAdapter
+import reactivemongo.api.bson.MacroConfiguration.Aux
+import reactivemongo.api.bson.{MacroConfiguration, MacroOptions, TypeNaming}
 
 /** https://www.programcreek.com/scala/play.api.libs.concurrent.AkkaGuiceSupport */
 
@@ -26,10 +30,16 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
 
   import akka.actor.typed.scaladsl.adapter._
   import play.Module.WalletsSystem
+  import model.wallets.WalletEvents._
+
+  implicit val conf: Aux[MacroOptions] = MacroConfiguration(discriminator = "_type", typeNaming = TypeNaming.SimpleName)
 
   private val actorSystemName = "WalletsSystem"
   private val config: Config = configuration.underlying
   private val walletsSystem: ActorSystem = ActorSystem(actorSystemName, config.getConfig(actorSystemName))
+
+  private val serializer = ReactiveMongoEventSerializer(walletsSystem)
+
 
   override def configure(): Unit = {
 
@@ -56,4 +66,8 @@ class Module(environment: Environment, configuration: Configuration) extends Abs
     bind[EntityProvider[WalletCommands.Command, WalletId]].toInstance(walletSharding.entityProvider())
     bind[EntityProvider[WalletFactory.Command, GanbaruClientId]].toInstance(walletFactory.entityProvider())
   }
+
+  /** Adapt Events */
+  EventAdapter.adaptEventsFor(walletsSystem)
+
 }
