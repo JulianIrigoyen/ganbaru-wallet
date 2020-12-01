@@ -5,12 +5,12 @@ import java.util.UUID
 
 import akka.actor.typed.{Behavior, SupervisorStrategy}
 import akka.actor.typed.scaladsl.Behaviors
-import akka.persistence.typed.PersistenceId
-import akka.persistence.typed.scaladsl.{EventSourcedBehavior, RetentionCriteria}
+import akka.persistence.typed.{PersistenceId, SnapshotSelectionCriteria}
+import akka.persistence.typed.scaladsl.{EventSourcedBehavior, Recovery, RetentionCriteria}
 import model.{Account, Transaction}
 import model.settings.GanbaruServiceSettings
 import model.wallets.WalletCommands.Command
-import model.wallets.WalletEvents.Event
+import model.wallets.WalletEvents.{Event, TransactionRolledback}
 import model.wallets.state.EmptyWalletState
 import model.wallets.state.WalletState.{EventsAnswerEffect, WalletState}
 import play.api.libs.json.{Format, Json}
@@ -49,9 +49,8 @@ object Wallet {
       val applyEvent: (WalletState, Event) => WalletState = _ applyEvent _
       val applyCommand: (WalletState, Command) => EventsAnswerEffect = _.applyCommand(_)
 
-      val state = commands.foldLeft[WalletState](EmptyWalletState(walletId, settings))(
-        (state, command) => applyCommand(state, command).applyEventsFrom(state, applyEvent)
-      )
+      val state = commands.foldLeft[WalletState](EmptyWalletState(walletId, settings))((state, command) =>
+        applyCommand(state, command).applyEventsFrom(state, applyEvent))
 
       EventSourcedBehavior[WalletCommands.Command, Event, WalletState](
         persistenceId = PersistenceId("Wallet", walletId.id),
