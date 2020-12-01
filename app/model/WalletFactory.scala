@@ -32,7 +32,7 @@ object WalletFactory {
         emptyState = WalletNumberState(222),
         commandHandler = commandHandler(ganbaruClientId, walletProvider),
         eventHandler = eventHandler
-      ).withRetention(RetentionCriteria.snapshotEvery(10, 1).withDeleteEventsOnSnapshot)
+      )
     }
   }
 
