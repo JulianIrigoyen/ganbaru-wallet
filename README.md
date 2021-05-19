@@ -1,7 +1,7 @@
 [![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://app.circleci.com/pipelines/github/JulianIrigoyen/ganbaru-wallet)
 [![Coverage Status](https://coveralls.io/repos/github/JulianIrigoyen/ganbaru-wallet/badge.svg?branch=master)](https://coveralls.io/github/JulianIrigoyen/ganbaru-wallet?branch=master)
 # [Ganbaru Wallet Application](https://ganbaru-wallet.herokuapp.com/v1/doc)
-###### Daruma Project
+
 The _Ganbaru Wallet_ app allows users to register wallets with multiple accounts, deposit and withdraw money to and from them and to create transactions among them. 
 
 The goal of this proof of concept is to implement the [Actor Model](https://doc.akka.io/docs/akka/current/typed/guide/actors-motivation.html) through the various tools provided by Lightbend's Akka libraries. In sum, these tools allow software developers to build **[highly reactive](https://www.lightbend.com/blog/reactive-manifesto-20)** applications with ease.
